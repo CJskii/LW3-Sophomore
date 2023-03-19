@@ -1,9 +1,15 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "../styles/Home.module.css";
+import Navbar from "@/Components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// "--palatinate-blue": "#4641C5ff",
+// "--byzantium": "#702762ff",
+// "--fire-engine-red": "#C02826ff",
+// "--wine": "#753140ff",
+// "--celestial-blue": "#309EEBff",
 
 export default function Home() {
   return (
@@ -14,8 +20,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/rocket.svg" />
       </Head>
-      <main className={`min-h-screen ${styles.background} text-base-content`}>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <main className={`min-h-screen ${styles.background}`}>
+        <Navbar />
       </main>
     </>
   );

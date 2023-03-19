@@ -8,7 +8,12 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backdropFilter: {
+        none: "none",
+        blur: "blur(20px)",
+      },
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {
@@ -16,7 +21,14 @@ module.exports = {
       {
         synthwave: {
           ...require("daisyui/src/colors/themes")["[data-theme=synthwave]"],
-          "base-content": "orange",
+          "base-content": "#4641C5ff", // palatinate-blue
+          "base-200": "#4641C5ff", // palatinate-blue
+          "base-300": "#309EEBff", //--celestial-blue"
+          "--palatinate-blue": "#4641C5ff",
+          "--byzantium": "#702762ff",
+          "--fire-engine-red": "#C02826ff",
+          "--wine": "#753140ff",
+          "--celestial-blue": "#309EEBff",
         },
       },
     ],
