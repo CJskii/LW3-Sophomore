@@ -4,6 +4,7 @@ import styles from "../styles/Home.module.css";
 import Navbar from "@/Components/Navbar";
 import Home from "@/Components/Home";
 import Footer from "@/Components/Footer";
+import { motion } from "framer-motion";
 
 const inter = Inter({ subsets: ["latin"] });
 
