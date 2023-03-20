@@ -2,9 +2,9 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "../styles/Home.module.css";
 import Navbar from "@/Components/Navbar";
-import Home from "@/Components/Home";
+import Links from "@/Components/Links";
 import Footer from "@/Components/Footer";
-import { motion } from "framer-motion";
+import Hero from "@/Components/Hero";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 // "--wine": "#753140ff",
 // "--celestial-blue": "#309EEBff",
 
-export default function App() {
+export default function Home() {
   return (
     <>
       <Head>
@@ -28,7 +28,8 @@ export default function App() {
       >
         <div className="w-full">
           <Navbar />
-          <Home />
+          <Links />
+          <Hero />
         </div>
         <Footer />
       </main>
