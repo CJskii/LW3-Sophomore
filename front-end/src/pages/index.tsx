@@ -2,6 +2,8 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "../styles/Home.module.css";
 import Navbar from "@/Components/Navbar";
+import Home from "@/Components/Home";
+import Footer from "@/Components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +13,7 @@ const inter = Inter({ subsets: ["latin"] });
 // "--wine": "#753140ff",
 // "--celestial-blue": "#309EEBff",
 
-export default function Home() {
+export default function App() {
   return (
     <>
       <Head>
@@ -20,8 +22,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/rocket.svg" />
       </Head>
-      <main className={`min-h-screen ${styles.background}`}>
-        <Navbar />
+      <main
+        className={`min-h-screen ${styles.background} flex flex-col justify-between items-center`}
+      >
+        <div className="w-full">
+          <Navbar />
+          <Home />
+        </div>
+        <Footer />
       </main>
     </>
   );

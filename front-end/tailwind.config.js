@@ -24,6 +24,7 @@ module.exports = {
           "base-content": "#4641C5ff", // palatinate-blue
           "base-200": "#4641C5ff", // palatinate-blue
           "base-300": "#309EEBff", //--celestial-blue"
+          accent: "#C02826ff",
           "--palatinate-blue": "#4641C5ff",
           "--byzantium": "#702762ff",
           "--fire-engine-red": "#C02826ff",
