@@ -47,7 +47,7 @@ const Hero = () => {
         Discover the potential of decentralised applications and take your
         skills to the next level. <br></br> 🤓
       </motion.div>
-      <motion.button
+      {/* <motion.button
         variants={variantsBtn}
         whileHover="hover"
         whileTap="tap"
@@ -55,7 +55,7 @@ const Hero = () => {
         className="btn px-8 hover:text-yellow-400 mt-12"
       >
         Get started
-      </motion.button>
+      </motion.button> */}
     </div>
   );
 };

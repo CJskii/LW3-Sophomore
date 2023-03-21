@@ -1,14 +1,8 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
-import Start from "@/Components/Start";
+import Hero from "@/Components/Hero";
 
 const inter = Inter({ subsets: ["latin"] });
-
-// "--palatinate-blue": "#4641C5ff",
-// "--byzantium": "#702762ff",
-// "--fire-engine-red": "#C02826ff",
-// "--wine": "#753140ff",
-// "--celestial-blue": "#309EEBff",
 
 export default function Home() {
   return (
@@ -20,7 +14,7 @@ export default function Home() {
         <link rel="icon" href="/rocket.svg" />
       </Head>
       <main className="w-full h-full grow">
-        <Start />
+        <Hero />
       </main>
     </>
   );
