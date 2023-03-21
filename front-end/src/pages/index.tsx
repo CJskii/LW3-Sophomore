@@ -23,15 +23,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/rocket.svg" />
       </Head>
-      <main
-        className={`min-h-screen ${styles.background} flex flex-col justify-between items-center`}
-      >
-        <div className="w-full">
-          <Navbar />
-          <Links />
-          <Hero />
-        </div>
-        <Footer />
+      <main className="w-full h-full grow">
+        <Hero />
       </main>
     </>
   );

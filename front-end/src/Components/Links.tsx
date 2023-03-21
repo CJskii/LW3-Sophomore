@@ -1,5 +1,6 @@
 import Divider from "./Divider";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const Home = () => {
   const variantsLinks = {
@@ -8,21 +9,25 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-8">
-      <div className="flex w-full h-full pt-4">
-        <motion.div
-          variants={variantsLinks}
-          initial="hidden"
-          animate="visible"
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 20,
-          }}
+    <div className="flex flex-col justify-center items-center gap-8 w-full">
+      <div className="flex justify-evenly items-center w-full h-full pt-4">
+        <Link
+          href="whitelist"
           className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center"
         >
-          WL
-        </motion.div>
+          <motion.div
+            variants={variantsLinks}
+            initial="hidden"
+            animate="visible"
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+            }}
+          >
+            WL
+          </motion.div>
+        </Link>
         <Divider />
         <motion.div
           variants={variantsLinks}
