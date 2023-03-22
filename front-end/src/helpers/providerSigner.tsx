@@ -3,7 +3,7 @@ import Web3Modal from "web3modal";
 
 interface Props {
   needSigner: boolean;
-  web3modalRef: React.MutableRefObject<Web3Modal | undefined>;
+  web3modalRef: React.MutableRefObject<Web3Modal | null>;
 }
 
 export const getProviderOrSigner = async ({
