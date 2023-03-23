@@ -43,7 +43,7 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
         presaleEnded = block.timestamp + 5 minutes;
     }
 
-    // function to mint NFT
+    // function to mint NFT during the presale
     // check if presale has started and current time is before time of presale ending
     // check if total number of tokens minted doesn't exceed max tokenIds in the contract
     // check if value of ethers sent to the contract are more or equal than current price in the contract
@@ -56,6 +56,23 @@ contract CryptoDevs is ERC721Enumerable, Ownable {
         require(presaleStarted && block.timestamp < presaleEnded, "Presale not started");
         require(tokenIds < maxTokenIds, "Exceeded maximum supply");
         require(msg.value >= _price, "Incorrect ether value");
+        tokenIds += 1;
+        _safeMint(msg.sender, tokenIds);
+    }
+
+    // function to mint NFT after the presale has ended
+    // check if presale is over
+    // check if total number of tokens minted doesn't exceed max tokenIds in the contract
+    // check if value of ethers sent to the contract are more or equal than current price in the contract
+
+    // if all conditions are met 
+    // increment totalIds variable in the contract
+    // call safemint function
+
+    function mint() public payable onlyWhenNotPaused {
+        require(presaleStarted && block.timestamp >= presaleEnded, "Presale not started yet");
+        require(tokenIds < maxTokenIds, "Exceeded maximum supply");
+        require(msg.value >= _price, "Incorrect ehter value");
         tokenIds += 1;
         _safeMint(msg.sender, tokenIds);
     }
