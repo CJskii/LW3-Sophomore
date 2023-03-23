@@ -1,12 +1,11 @@
 import { walletContext } from "@/pages/_app";
 import { getProviderOrSigner } from "@/helpers/providerSigner";
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 import { web3ModalContext } from "@/pages/_app";
 
 const ConnectButton = () => {
   const [walletConnected, setWalletConnected] = useContext(walletContext);
-  const [loading, setLoading] = useState<boolean>(false);
   const [web3modalRef, setWeb3modalRef] = useContext(web3ModalContext);
   const [pendingRequest, setPendingRequest] = useState(false);
 
@@ -20,7 +19,7 @@ const ConnectButton = () => {
       connectWallet();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletConnected]);
+  }, []);
 
   const connectWallet = async () => {
     try {
@@ -33,9 +32,26 @@ const ConnectButton = () => {
     }
   };
 
+  const disconnectWallet = async () => {
+    try {
+      setWalletConnected(false);
+      web3modalRef.current?.clearCachedProvider();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="w-full h-full flex justify-center items-center grow pt-2">
-      <button className="btn">Connect</button>
+      {walletConnected ? (
+        <button className="btn" onClick={disconnectWallet}>
+          Disconnect
+        </button>
+      ) : (
+        <button className="btn" onClick={connectWallet}>
+          Connect
+        </button>
+      )}
     </div>
   );
 };
