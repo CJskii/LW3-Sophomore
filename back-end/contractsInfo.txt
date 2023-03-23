@@ -1,3 +1,7 @@
 Whitelist - Sepolia: 0x0B917F15EE256F5d24170e1Bba9b9Fd648EDd976
 
-https://sepolia.etherscan.io/address/0x0B917F15EE256F5d24170e1Bba9b9Fd648EDd976
+URL: https://sepolia.etherscan.io/address/0x0B917F15EE256F5d24170e1Bba9b9Fd648EDd976
+
+NFT collection - Sepolia: 0x18649bAC1ACdBd986aD08738d6273a4C6A91cc93
+
+URL: https://sepolia.etherscan.io/address/0x18649bAC1ACdBd986aD08738d6273a4C6A91cc93
