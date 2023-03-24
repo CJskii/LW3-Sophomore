@@ -6,6 +6,7 @@ import { web3ModalContext } from "@/pages/_app";
 import { WHITELIST_CONTRACT_ADDRESS, abi } from "../../constants/whitelist";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import WhitelistHeader from "./Header";
+import Image from "next/image";
 
 const Whitelist = () => {
   const [walletConnected, setWalletConnected] = useContext(walletContext);
@@ -141,7 +142,7 @@ const Whitelist = () => {
         <div className="w-fit h-full flex flex-col justify-center items-center gap-4 xl:items-start text-yellow-400 self-center place-self-center p-8 max-sm:px-0 text-center">
           <WhitelistHeader />
           <div className="text-xl text-blue-200">
-            It's an NFT collection for developers in Crypto.
+            It&#39;s an NFT collection for developers in Crypto.
           </div>
           <div className="italic text-lg text-wine max-sm:px-2">
             {numberOfWhitelisted} user has joined the Whitelist already
@@ -149,7 +150,12 @@ const Whitelist = () => {
           <div className="text-md text-gray-200">{renderButton()}</div>
         </div>
         <div className="p-8 max-lg:w-[300px] max-lg:h-[300px] lg:w-[400px] lg:h-[400px] w-[500px] h-[500px] flex justify-center items-center col-start-2 max-sm:hidden">
-          <img src="./crypto-devs.svg" />
+          <Image
+            src="./crypto-devs.svg"
+            alt="whitelist"
+            width={400}
+            height={400}
+          />
         </div>
       </div>
     </div>
