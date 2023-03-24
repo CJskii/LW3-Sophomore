@@ -4,6 +4,7 @@ import { Contract, utils } from "ethers";
 import { NFT_CONTRACT_ADDRESS, abi } from "../../constants/NFTcollection";
 import { getProviderOrSigner } from "../../helpers/providerSigner";
 import { JsonRpcSigner } from "@ethersproject/providers";
+import Web3Modal from "web3modal";
 
 const NFT = () => {
   const [web3modalRef, setWeb3modalRef] = useContext(web3ModalContext);
@@ -13,7 +14,57 @@ const NFT = () => {
   const [presaleEnded, setPresaleEnded] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
-  const [tokenIdsMinted, setTokenIdsMinted] = useState<string>("0");
+  const [tokenIdsMinted, setTokenIdsMinted] = useState<number>(0);
+
+  // ___ ON COMPONENT RENDER ___
+
+  useEffect(() => {
+    if (!walletConnected) {
+      web3modalRef.current = new Web3Modal({
+        network: "sepolia",
+        providerOptions: {},
+        disableInjectedProvider: false,
+      });
+      connectWallet();
+    }
+  }, []);
+
+  useEffect(() => {
+    // Check if presale has started
+    // const checkPresale = async () => {
+    //   const _presaleStarted = await checkIfPresaleStarted();
+    //   if (_presaleStarted) {
+    //     checkIfPresaleEnded();
+    //   }
+    // };
+
+    // checkPresale();
+    getTokenIdsMinted();
+
+    // Interval to call and check every 5 seconds if presale has ended
+    const _presaleEndedInterval = setInterval(async function () {
+      const _presaleStarted = await checkIfPresaleStarted();
+      if (_presaleStarted) {
+        const _presaleEnded = await checkIfPresaleEnded();
+        if (_presaleEnded) {
+          clearInterval(_presaleEndedInterval);
+        }
+      }
+    }, 5 * 1000);
+
+    setInterval(async function () {
+      await getTokenIdsMinted();
+    }, 5 * 1000);
+  }, [walletConnected]);
+
+  const connectWallet = async () => {
+    try {
+      await getProviderOrSigner({ needSigner: false, web3modalRef });
+      setWalletConnected(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // ___ MINT NFT DURING PRESALE ___
 
@@ -96,7 +147,7 @@ const NFT = () => {
       await tx.wait();
       // set loading to false and remove loading message
       setLoading(false);
-      //await checkIfPresaleStarted()
+      await checkIfPresaleStarted();
     } catch (err) {
       console.log(err);
     }
@@ -140,7 +191,6 @@ const NFT = () => {
       const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, provider);
       // on instance of our contract initiate reading of presaleEnded boolean
       const _presaleEnded = await nftContract.presaleEnded();
-      console.log(presaleEnded);
 
       // presaleEnded is BIG NUMBER, so we are using lt(less than function)
       // Date.now() / 1000 is a current time in seconds
@@ -181,7 +231,7 @@ const NFT = () => {
       // read address from metamask
       const address = await (signer as JsonRpcSigner).getAddress();
       // if metamask address is same as _owner returned from our contract set owner to true
-      if (address.toLowerCase() === _owner.toLowercase()) {
+      if (address.toLowerCase() === _owner.toLowerCase()) {
         setIsOwner(true);
       }
     } catch (err) {
@@ -206,15 +256,6 @@ const NFT = () => {
 
     // since _tokenIds is a BIG NUMBER we are using .toString() method to convert it
     setTokenIdsMinted(_tokenIds.toString());
-  };
-
-  const connectWallet = async () => {
-    try {
-      await getProviderOrSigner({ needSigner: false, web3modalRef });
-      setWalletConnected(true);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
