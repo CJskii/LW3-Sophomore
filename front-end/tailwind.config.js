@@ -13,6 +13,11 @@ module.exports = {
         none: "none",
         blur: "blur(20px)",
       },
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
+        nunito: ["Nunito", "sans-serif"],
+      },
     },
   },
   plugins: [require("daisyui")],

@@ -47,15 +47,6 @@ const Hero = () => {
         Discover the potential of decentralised applications and take your
         skills to the next level. <br></br> 🤓
       </motion.div>
-      {/* <motion.button
-        variants={variantsBtn}
-        whileHover="hover"
-        whileTap="tap"
-        animate="animate"
-        className="btn px-8 hover:text-yellow-400 mt-12"
-      >
-        Get started
-      </motion.button> */}
     </div>
   );
 };
