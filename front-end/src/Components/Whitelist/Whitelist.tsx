@@ -115,7 +115,7 @@ const Whitelist = () => {
       if (joinedWhitelist) {
         return <div>Thanks for joining the Whitelist!</div>;
       } else if (loading) {
-        return <button className="btn">Loading...</button>;
+        return <button className="btn loading">Loading...</button>;
       } else {
         return (
           <button onClick={addAddressToWhitelist} className="btn">

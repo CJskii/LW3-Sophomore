@@ -6,6 +6,7 @@ import { getProviderOrSigner } from "../../helpers/providerSigner";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import Image from "next/image";
+import CollectionPreview from "./CollectionPreview";
 
 const NFT = () => {
   const [web3modalRef, setWeb3modalRef] = useContext(web3ModalContext);
@@ -275,7 +276,7 @@ const NFT = () => {
 
     // display loading button
     if (loading) {
-      return <button className="btn">Loading...</button>;
+      return <button className="btn loading">Loading...</button>;
     }
 
     // display start presale button for the owner
@@ -335,11 +336,12 @@ const NFT = () => {
         </div>
         <div className="p-8 max-lg:w-[300px] max-lg:h-[300px] lg:w-[400px] lg:h-[400px] w-[500px] h-[500px] flex justify-center items-center col-start-2 max-sm:hidden">
           <Image
-            src={`./cryptodevs/${Math.floor(Math.random() * 21)}.svg`}
+            src={`./cryptodevs/${Math.floor(Math.random() * 20)}.svg`}
             alt="0"
             width={250}
             height={250}
           />
+          <CollectionPreview />
         </div>
       </div>
     </div>
