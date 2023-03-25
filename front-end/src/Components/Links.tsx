@@ -14,7 +14,7 @@ const Home = ({ currentPath }: { currentPath: string }) => {
         {/* WL */}
         <Link
           href="/whitelist"
-          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center"
+          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center font-nunito hover:font-bold hover:text-blue-500"
         >
           <motion.div
             variants={variantsLinks}
@@ -34,7 +34,7 @@ const Home = ({ currentPath }: { currentPath: string }) => {
         {/* NFT */}
         <Link
           href="/nftcollection"
-          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center"
+          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center font-nunito hover:font-bold hover:text-blue-500"
         >
           <motion.div
             variants={variantsLinks}
@@ -54,7 +54,7 @@ const Home = ({ currentPath }: { currentPath: string }) => {
         {/* ICO */}
         <Link
           href="/ico"
-          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center"
+          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center font-nunito hover:font-bold hover:text-blue-500"
         >
           <motion.div
             variants={variantsLinks}
@@ -73,7 +73,7 @@ const Home = ({ currentPath }: { currentPath: string }) => {
         <Divider />
         <Link
           href="/dao"
-          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center"
+          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center font-nunito hover:font-bold hover:text-blue-500"
         >
           <motion.div
             variants={variantsLinks}
@@ -92,7 +92,7 @@ const Home = ({ currentPath }: { currentPath: string }) => {
         <Divider />
         <Link
           href="/dex"
-          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center"
+          className="grid h-20 flex-grow card bg-transparent rounded-box place-items-center font-nunito hover:font-bold hover:text-blue-500"
         >
           <motion.div
             variants={variantsLinks}
