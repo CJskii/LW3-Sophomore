@@ -143,8 +143,7 @@ const NFT = () => {
       // initiate instance of our contract
       const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
       // on instance of our contract initiate presale by calling startPresale function
-      const tx = nftContract.startPresale();
-
+      const tx = await nftContract.startPresale();
       // display loading message
       setLoading(true);
       // we are waiting for presale to start
@@ -312,7 +311,11 @@ const NFT = () => {
 
     // presale started and ended - public mint
     if (presaleStarted && presaleEnded) {
-      return <button onClick={publicMint}>Public Mint 🚀</button>;
+      return (
+        <button className="btn" onClick={publicMint}>
+          Public Mint 🚀
+        </button>
+      );
     }
   };
 
