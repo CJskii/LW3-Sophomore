@@ -89,7 +89,7 @@ const ICO = () => {
 
       // get signer - we use this to extract currently connected wallet address
       const signer = await getProviderOrSigner({
-        needSigner: false,
+        needSigner: true,
         web3modalRef,
       });
       // get current address
@@ -140,15 +140,13 @@ const ICO = () => {
 
       // get signer - we use this to extract currently connected wallet address
       const signer = await getProviderOrSigner({
-        needSigner: false,
+        needSigner: true,
         web3modalRef,
       });
       // get address
       const address = await (signer as JsonRpcSigner).getAddress();
-
       // call balance from the contract
-      const balance = tokenContract.balanceOf(address);
-
+      const balance = await tokenContract.balanceOf(address);
       // balance is already a big number so we don't need to convert it
       setBalanceOfTokens(balance);
     } catch (err) {
@@ -159,7 +157,7 @@ const ICO = () => {
 
   // ___ MINT 'amount' OF TOKENS TO GIVEN ADDRESS ___
 
-  const mintTokens = async (amount: number) => {
+  const mintTokens = async (amount: any) => {
     try {
       // initiate signer instance - we will be writing to the contract
       const signer = await getProviderOrSigner({
@@ -242,7 +240,7 @@ const ICO = () => {
       );
 
       // retrieve total supply from the contract
-      const _tokensMinted = tokenContract.totalSupply();
+      const _tokensMinted = await tokenContract.totalSupply();
       setTokensMinted(_tokensMinted);
     } catch (err) {
       console.log(err);
@@ -272,7 +270,7 @@ const ICO = () => {
 
       // get signer - we use this to extract currently connected wallet address
       const signer = await getProviderOrSigner({
-        needSigner: false,
+        needSigner: true,
         web3modalRef,
       });
 
@@ -292,7 +290,7 @@ const ICO = () => {
     try {
       // get signer - we use this to extract currently connected wallet address
       const signer = await getProviderOrSigner({
-        needSigner: false,
+        needSigner: true,
         web3modalRef,
       });
 
@@ -304,7 +302,7 @@ const ICO = () => {
       );
 
       // call withdraw function
-      const tx = tokenContract.withdraw();
+      const tx = await tokenContract.withdraw();
 
       setLoading(true);
       await tx.wait();
@@ -327,11 +325,11 @@ const ICO = () => {
       );
     }
     // If tokens to be claimed are greater than 0, Return a claim button
-    if (tokensToBeClaimed > 0) {
+    if (tokensToBeClaimed.gt(zero)) {
       return (
         <div>
-          <div className="">
-            {tokensToBeClaimed * 10} Tokens can be claimed!
+          <div className="py-2 text-yellow-400">
+            {tokensToBeClaimed.mul(10).toString()} Tokens can be claimed!
           </div>
           <button className="btn" onClick={claimTokens}>
             Claim Tokens
@@ -341,20 +339,26 @@ const ICO = () => {
     }
     // If user doesn't have any tokens to claim, show the mint button
     return (
-      <div style={{ display: "flex-col" }}>
+      <div className="w-full flex flex-col justify-center ">
         <div>
           <input
             type="number"
             placeholder="Amount of Tokens"
             // BigNumber.from converts the `e.target.value` to a BigNumber
-            onChange={(e) => setTokenAmount(BigNumber.from(e.target.value))}
-            className=""
+            onChange={(e) => {
+              if (e.target.value) {
+                setTokenAmount(BigNumber.from(e.target?.value));
+              } else {
+                setTokenAmount(zero);
+              }
+            }}
+            className=" p-2"
           />
         </div>
 
         <button
-          className=""
-          disabled={!(tokenAmount > 0)}
+          className="btn m-4"
+          disabled={!tokenAmount.gt(zero)}
           onClick={() => mintTokens(tokenAmount)}
         >
           Mint Tokens
@@ -368,21 +372,38 @@ const ICO = () => {
       <h1 className="text-5xl font-montserrat font-bold self-center place-self-center col-start-1 col-span-12 max-lg:row-span-2 max-sm:row-span-1 text-center max-sm:col-start-1 max-sm:text-4xl">
         ICO dApp
       </h1>
-      <div className="row-start-2 row-span-4 col-start-2 xl:col-start-3 col-span-10 xl:col-span-8 max-lg:row-start-3 max-sm:row-start-2 max-lg:col-start-1 max-lg:col-span-12 max-sm:col-span-12 max-[320px]:col-span-11 max-lg:m-2 grid grid-flow-row gap-8 bg-indigo-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 border border-gray-100">
-        <div className="w-fit h-full font-roboto flex flex-col justify-center items-center gap-4 xl:items-start text-yellow-400 self-center place-self-center p-8 max-sm:px-0 text-center">
+      <div className="row-start-2 row-span-4 col-start-2 xl:col-start-3 col-span-10  xl:col-span-8 max-lg:row-start-3 max-sm:row-start-2 max-lg:col-start-1 max-lg:col-span-12 max-sm:col-span-12 max-[320px]:col-span-11 max-lg:m-2 grid grid-flow-row gap-8 bg-indigo-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm max-sm:backdrop-blur-md bg-opacity-30 border border-gray-100">
+        <div className="w-fit h-full font-roboto flex flex-col justify-center items-center gap-4 xl:items-start self-center place-self-center p-8 max-sm:px-0 max-sm:col-span-2 max-sm:col-start-1 text-center">
           <h1 className="text-3xl lg:text-4xl text-blue-200 text-center">
-            Welcome to Crypto Devs!
+            Welcome to Crypto Devs ICO!
           </h1>
           <div className="text-xl text-blue-200">
-            It&#39;s an NFT collection for developers in Crypto.
+            You can claim or mint Crypto Dev tokens here
           </div>
-          <div className="italic text-lg text-wine max-sm:px-2">
-            {tokenIdsMinted}/20 have been minted
-          </div>
+
           <div className="text-md text-gray-200">{renderButton()}</div>
         </div>
-        <div className="p-8 max-lg:w-[300px] max-lg:h-[300px] lg:w-[400px] lg:h-[400px] w-[500px] h-[500px] flex justify-center items-center col-start-2 max-sm:hidden">
-          {/* image */}
+        <div className="p-8 w-full h-full grid grid-flow-row col-start-2 max-sm:row-start-2 max-sm:col-span-2 max-sm:col-start-1">
+          <div className="italic text-lg text-wine max-sm:px-2 justify-self-center self-end text-blue-100">
+            {balanceOfTokens._isBigNumber
+              ? `You have minted ${utils.formatEther(
+                  balanceOfTokens
+                )} Crypto Dev
+            Tokens`
+              : null}
+          </div>
+          <div className="italic text-lg text-wine max-sm:px-2 justify-self-center self-start text-blue-100 pt-4">
+            {tokensMinted._isBigNumber
+              ? `Overall ${utils.formatEther(
+                  tokensMinted
+                )}/10000 have been minted!!!`
+              : null}
+          </div>
+          {isOwner ? (
+            <button className="btn" onClick={withdrawCoins}>
+              Withdraw
+            </button>
+          ) : null}
         </div>
       </div>
     </div>
