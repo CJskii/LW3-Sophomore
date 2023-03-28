@@ -1,5 +1,5 @@
 import { Contract, BigNumber, utils } from "ethers";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   NFT_CONTRACT_ADDRESS,
   TOKEN_CONTRACT_ADDRESS,
@@ -30,6 +30,7 @@ const ICO = () => {
   const [tokenAmount, setTokenAmount] = useState(zero);
   // amount of minted tokens until now
   const [tokensMinted, setTokensMinted] = useState(zero);
+  const [currentAddress, setCurrentAddress] = useState<string>("");
 
   useEffect(() => {
     // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
@@ -37,7 +38,7 @@ const ICO = () => {
       // Assign the Web3Modal class to the reference object by setting it's `current` value
       // The `current` value is persisted throughout as long as this page is open
       web3modalRef.current = new Web3Modal({
-        network: "goerli",
+        network: "sepolia",
         providerOptions: {},
         disableInjectedProvider: false,
       });
@@ -47,12 +48,24 @@ const ICO = () => {
   }, []);
 
   useEffect(() => {
+    const interval = setInterval(async () => {
+      const signer = await getProviderOrSigner({
+        needSigner: true,
+        web3modalRef,
+      });
+      const address = await (signer as JsonRpcSigner).getAddress();
+      setCurrentAddress(address);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     getTotalTokensMinted();
     getBalanceOfTokens();
     getTokensToBeClaimed();
     getOwner();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletConnected]);
+  }, [walletConnected, currentAddress]);
 
   const connectWallet = async () => {
     try {
