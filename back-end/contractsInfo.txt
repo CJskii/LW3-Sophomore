@@ -15,3 +15,16 @@ URL: https://sepolia.etherscan.io/address/0x1Fa510dA81A92A5737dEf80172401E3f9712
 CryptoDevs Token: 0x26ED5E9a94ea92A0E7DfC103b7681E94Ce9B52bF
 
 URL: https://sepolia.etherscan.io/address/0x26ED5E9a94ea92A0E7DfC103b7681E94Ce9B52bF
+
+// ___ FAKE NFT MARKETPLACE CONTRACT___
+
+NFT Marketplace: 0x5984594262ddC084fDE998b1443AfDf2B7dBbc9B
+
+URL: https://sepolia.etherscan.io/address/0x5984594262ddC084fDE998b1443AfDf2B7dBbc9B
+
+
+// ___ DAO CONTRACT ___
+0xaec7896cced812b1321dd73b9e02deacabeb6806 --- withdraw eth from this contract
+CryptoDevsDAO: 0x7C0fB2D2fEC4606e73F3849E5bF37353efc24648
+
+https://sepolia.etherscan.io/address/0x7C0fB2D2fEC4606e73F3849E5bF37353efc24648
