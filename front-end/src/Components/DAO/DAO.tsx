@@ -3,12 +3,13 @@ import {
   CRYPTODEVS_DAO_CONTRACT_ADDRESS,
   CRYPTODEVS_DAO_CONTRACT_ABI,
 } from "@/constants/DAO";
-import { Contract } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 import { web3ModalContext } from "@/pages/_app";
 import Web3Modal from "web3modal";
 import { walletContext } from "@/pages/_app";
 import { getProviderOrSigner } from "@/helpers/providerSigner";
 import { useContext, useEffect, useState } from "react";
+import Image from "next/image";
 import getDaoContractInstance from "@/helpers/getDAOcontract";
 import getNFTContractInstance from "@/helpers/getNFTcontract";
 import currentAddress from "@/helpers/getAddress";
@@ -91,7 +92,7 @@ const DAO = () => {
         web3modalRef,
       });
       const contract = await getDaoContractInstance(signer);
-      const tx = await contract.withdrawEther();
+      const tx = await contract.withdraw();
       setLoading(true);
       await tx.wait();
       setLoading(false);
@@ -248,9 +249,167 @@ const DAO = () => {
     }
   };
 
+  // Render the contents of the appropriate tab based on `selectedTab`
+  function renderTabs() {
+    if (selectedTab === "Create Proposal") {
+      return renderCreateProposalTab();
+    } else if (selectedTab === "View Proposals") {
+      return renderViewProposalsTab();
+    }
+    return null;
+  }
+
+  // Renders the 'Create Proposal' tab content
+  function renderCreateProposalTab() {
+    if (loading) {
+      return <div className="btn loading col-span-2">Waiting for txn...</div>;
+    } else if (nftBalance == 0) {
+      return (
+        <div className="bg-slate-800 place-self-center col-span-2 mb-2 p-2 flex flex-col justify-center items-center text-rose-600 rounded">
+          You do not own any CryptoDevs NFTs. <br />
+          <b>You cannot create or vote on proposals</b>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex justify-center items-center gap-2 col-span-2 mb-4 bg-slate-800 w-fit place-self-center p-2 rounded">
+          <div className="flex flex-col justify-start items-center">
+            <label className="text-white">
+              Fake NFT Token ID to Purchase:{" "}
+            </label>
+            <input
+              placeholder="0"
+              type="number"
+              onChange={(e) => setFakeNftTokenId(e.target.value)}
+            />
+          </div>
+
+          <button className="btn" onClick={createProposal}>
+            Create
+          </button>
+        </div>
+      );
+    }
+  }
+
+  // Renders the 'View Proposals' tab content
+  function renderViewProposalsTab() {
+    if (loading) {
+      return <div className="btn loading col-span-2">Waiting for txn...</div>;
+    } else if (proposals.length === 0) {
+      return (
+        <div className="col-span-2 self-center place-self-center mb-4 text-xl text-rose-600 bg-slate-800 p-4 rounded">
+          No proposals have been created
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {proposals.map(({ p, index }: { p: any; index: number }) => (
+            <div key={index} className="">
+              <p>Proposal ID: {p.proposalId}</p>
+              <p>Fake NFT to Purchase: {p.nftTokenId}</p>
+              <p>Deadline: {p.deadline.toLocaleString()}</p>
+              <p>Yay Votes: {p.yayVotes}</p>
+              <p>Nay Votes: {p.nayVotes}</p>
+              <p>Executed?: {p.executed.toString()}</p>
+              {p.deadline.getTime() > Date.now() && !p.executed ? (
+                <div className="">
+                  <button
+                    className="btn"
+                    onClick={() => voteOnProposal(p.proposalId, "YAY")}
+                  >
+                    Vote YAY
+                  </button>
+                  <button
+                    className="btn"
+                    onClick={() => voteOnProposal(p.proposalId, "NAY")}
+                  >
+                    Vote NAY
+                  </button>
+                </div>
+              ) : p.deadline.getTime() < Date.now() && !p.executed ? (
+                <div className="">
+                  <button
+                    className="btn"
+                    onClick={() => executeProposal(p.proposalId)}
+                  >
+                    Execute Proposal{" "}
+                    {p.yayVotes > p.nayVotes ? "(YAY)" : "(NAY)"}
+                  </button>
+                </div>
+              ) : (
+                <div className="">Proposal Executed</div>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    }
+  }
+
   return (
-    <div className="w-full h-full flex justify-center items-center grow pt-8">
-      <h1 className="text-5xl">DAO app</h1>
+    <div className="w-full h-full grid grid-rows-4 md:grid-rows-6 max-sm:grid-rows-8 grid-cols-12 grid-flow-rows pt-2 gap-8">
+      <h1 className="text-5xl font-montserrat font-bold self-center place-self-center col-start-1 col-span-12 max-lg:row-span-1 max-sm:row-span-1 text-center max-sm:col-start-1 max-sm:text-4xl">
+        DAO dApp
+      </h1>
+      <div className="row-start-2 row-span-4 col-start-2 xl:col-start-3 col-span-10 xl:col-span-8 max-lg:row-start-2 max-sm:row-start-2 max-lg:col-start-1 max-lg:col-span-12 max-sm:col-span-12 max-[320px]:col-span-11 max-lg:m-2 grid grid-flow-row gap-8 bg-indigo-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 border border-gray-100">
+        <div className="w-fit h-full font-roboto flex flex-col justify-center items-center gap-4 xl:items-start text-yellow-400 self-center place-self-center p-8 max-sm:px-0 text-center">
+          <h1 className="text-3xl lg:text-4xl text-blue-200 text-center">
+            Welcome to Crypto Devs DAO!
+          </h1>
+          <div className="text-xl text-blue-200 text-left">
+            Your CryptoDevs NFT Balance: {nftBalance}
+            <br></br>
+            Total Number of Proposals: {numProposals}
+          </div>
+          <div className="italic text-lg text-wine max-sm:px-2">
+            Treasury Balance: {formatEther(treasuryBalance)} ETH
+          </div>
+
+          <div className="flex flex-col justify-center items-center gap-4">
+            <div className="flex justify-center items-center gap-2 max-md:flex-col">
+              <button
+                className="btn"
+                onClick={() => setSelectedTab("Create Proposal")}
+              >
+                Create Proposal
+              </button>
+              <button
+                className="btn"
+                onClick={() => setSelectedTab("View Proposals")}
+              >
+                View Proposals
+              </button>
+            </div>
+
+            <div>
+              {isOwner ? (
+                <div>
+                  {loading ? (
+                    <button className="btn loading">Loading...</button>
+                  ) : (
+                    <button className="btn" onClick={withdrawDAOEther}>
+                      Withdraw DAO ETH
+                    </button>
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="p-8 max-lg:w-[300px] max-lg:h-[300px] lg:w-[400px] lg:h-[400px] w-[500px] h-[500px] flex justify-center items-center col-start-2 max-sm:hidden">
+          <Image
+            src={`./cryptodevs/${Math.floor(Math.random() * 20)}.svg`}
+            alt="0"
+            width={250}
+            height={250}
+          />
+        </div>
+        {renderTabs()}
+      </div>
     </div>
   );
 };
