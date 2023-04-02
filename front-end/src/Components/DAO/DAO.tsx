@@ -5,6 +5,7 @@ import {
 } from "@/constants/DAO";
 import { Contract } from "ethers";
 import { web3ModalContext } from "@/pages/_app";
+import Web3Modal from "web3modal";
 import { walletContext } from "@/pages/_app";
 import { getProviderOrSigner } from "@/helpers/providerSigner";
 import { useContext, useEffect, useState } from "react";
@@ -29,6 +30,38 @@ const DAO = () => {
   const [selectedTab, setSelectedTab] = useState("");
   const [loading, setLoading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    if (!walletConected) {
+      web3modalRef.current = new Web3Modal({
+        network: "sepolia",
+        providerOptions: {},
+        disableInjectedProvider: false,
+      });
+    }
+
+    connectWallet().then(() => {
+      getDAOTreasuryBalance();
+      getNumProposals();
+      getUserNFTBalance();
+      getDAOOwner();
+    });
+  }, [walletConected]);
+
+  useEffect(() => {
+    if (selectedTab === "View Proposals") {
+      fetchAllProposals(); // fetch all proposals from the DAO
+    }
+  }, [selectedTab]);
+
+  const connectWallet = async () => {
+    try {
+      await getProviderOrSigner({ needSigner: false, web3modalRef });
+      setWalletConnected(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getDAOOwner = async () => {
     try {
@@ -100,14 +133,15 @@ const DAO = () => {
   };
 
   // Read the balance of user's NFT and set to state
-  const getNFTBalance = async () => {
+  const getUserNFTBalance = async () => {
     try {
       const signer = await getProviderOrSigner({
         needSigner: true,
         web3modalRef,
       });
       const contract = await getNFTContractInstance(signer);
-      const balance = await contract.balanceOf(await currentAddress(signer));
+      const address = await currentAddress(signer);
+      const balance = await contract.balanceOf(address);
       setNftBalance(balance.toString());
     } catch (err) {
       console.log(err);
