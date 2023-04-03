@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { formatEther } from "ethers/lib/utils";
 import { motion } from "framer-motion";
+import { walletContext } from "@/pages/_app";
+import { useContext } from "react";
 
 interface Props {
   nftBalance: number;
@@ -22,6 +24,7 @@ const Overview = (props: Props) => {
     treasuryBalance,
     setSelectedTab,
   } = props;
+  const [walletConected, setWalletConnected] = useContext(walletContext);
   return (
     <>
       <motion.div
@@ -65,13 +68,25 @@ const Overview = (props: Props) => {
           <div className="flex justify-center items-center gap-2 max-md:flex-col">
             <button
               className="btn"
-              onClick={() => setSelectedTab("Create Proposal")}
+              onClick={() => {
+                if (walletConected) {
+                  setSelectedTab("Create Proposal");
+                } else if (!walletConected) {
+                  alert("Please connect your wallet to create a proposal.");
+                }
+              }}
             >
               Create Proposal
             </button>
             <button
               className="btn"
-              onClick={() => setSelectedTab("View Proposals")}
+              onClick={() => {
+                if (walletConected) {
+                  setSelectedTab("View Proposals");
+                } else if (!walletConected) {
+                  alert("Please connect your wallet to view proposals.");
+                }
+              }}
             >
               View Proposals
             </button>

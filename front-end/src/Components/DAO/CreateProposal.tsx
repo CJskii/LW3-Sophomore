@@ -6,12 +6,12 @@ import { web3ModalContext } from "@/pages/_app";
 
 interface Props {
   setSelectedTab: (tab: string) => void;
-  getNumProposalsInDAO: () => void;
+  getNumProposal: () => void;
   nftBalance: number;
 }
 
 const CreateProposal = (props: Props) => {
-  const { setSelectedTab, getNumProposalsInDAO, nftBalance } = props;
+  const { setSelectedTab, getNumProposal, nftBalance } = props;
   const [fakeNftTokenId, setFakeNftTokenId] = useState<string>("0");
   const [web3modalRef, setWeb3ModalRef] = useContext(web3ModalContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,7 +27,7 @@ const CreateProposal = (props: Props) => {
       const txn = await daoContract.createProposal(fakeNftTokenId);
       setLoading(true);
       await txn.wait();
-      await getNumProposalsInDAO();
+      await getNumProposal();
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -58,9 +58,9 @@ const CreateProposal = (props: Props) => {
             />
           </div>
 
-          {/* <button className="btn" onClick={createProposal}>
+          <button className="btn" onClick={createProposal}>
             Create
-          </button> */}
+          </button>
         </div>
       );
     }
@@ -113,18 +113,7 @@ const CreateProposal = (props: Props) => {
         }}
         className="flex justify-center max-sm:flex-col items-center gap-2 md:col-span-2 mb-4 bg-slate-800 w-fit place-self-center p-2 rounded"
       >
-        <div className="flex flex-col justify-start items-center">
-          <label className="text-white">Fake NFT Token ID to Purchase: </label>
-          <input
-            placeholder="0"
-            type="number"
-            onChange={(e) => setFakeNftTokenId(e.target.value)}
-          />
-        </div>
-
-        <button className="btn" onClick={createProposal}>
-          Create
-        </button>
+        {renderCreateProposalTab()}
       </motion.div>
     </motion.div>
   );

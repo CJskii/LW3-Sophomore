@@ -46,18 +46,18 @@ const DAO = () => {
       getNumProposal();
       getUserNFTBalance();
       getDAOOwner();
-      //fetchAllProposals();
+      getAllProposals();
       setLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConected]);
 
-  // useEffect(() => {
-  //   if (selectedTab === "View Proposals") {
-  //     fetchAllProposals(); // fetch all proposals from the DAO
-  //   }
-  //   //eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedTab]);
+  useEffect(() => {
+    if (selectedTab === "View Proposals") {
+      getAllProposals(); // fetch all proposals from the DAO
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTab]);
 
   const connectWallet = async () => {
     try {
@@ -147,7 +147,7 @@ const DAO = () => {
     }
   };
 
-  const getAllProposls = async () => {
+  const getAllProposals = async () => {
     try {
       const proposals = await fetchAllProposals(web3modalRef, numProposals);
       setProposals(proposals);
@@ -156,14 +156,12 @@ const DAO = () => {
     }
   };
 
-  // Renders the 'Create Proposal' tab content
-
   const renderDAOContent = () => {
     if (selectedTab === "Create Proposal") {
       return (
         <CreateProposal
           setSelectedTab={setSelectedTab}
-          getNumProposalsInDAO={getNumProposals}
+          getNumProposal={getNumProposal}
           nftBalance={nftBalance}
         />
       );
