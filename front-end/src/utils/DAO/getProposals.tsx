@@ -1,5 +1,5 @@
-import { getProviderOrSigner } from "./providerSigner";
-import getDaoContractInstance from "./getDAOcontract";
+import { getProviderOrSigner } from "../providerSigner";
+import getDaoContractInstance from "../getDAOcontract";
 // helper function to fetch and parse one proposal from the DAO contract
 // given the proposal ID
 // converts returned data into a javascript object with values we can use
@@ -33,7 +33,6 @@ export const fetchAllProposals = async (
 ) => {
   const proposals: any = [];
   try {
-    const proposals = [];
     for (let i = 0; i < numProposals; i++) {
       const proposal = await fetchProposalById(i, web3modalRef);
       proposals.push(proposal);

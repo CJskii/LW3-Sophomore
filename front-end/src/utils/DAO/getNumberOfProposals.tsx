@@ -1,5 +1,5 @@
-import { getProviderOrSigner } from "./providerSigner";
-import getDaoContractInstance from "./getDAOcontract";
+import { getProviderOrSigner } from "../providerSigner";
+import getDaoContractInstance from "../getDAOcontract";
 // Read number of proposals from the DAO contract and set it to state
 export const getNumProposals = async (web3modalRef: any) => {
   let number;

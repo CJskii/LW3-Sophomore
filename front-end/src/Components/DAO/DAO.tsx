@@ -1,14 +1,13 @@
-import { CRYPTODEVS_DAO_CONTRACT_ADDRESS } from "@/constants/DAO";
 import { web3ModalContext } from "@/pages/_app";
 import Web3Modal from "web3modal";
 import { walletContext } from "@/pages/_app";
 import { getProviderOrSigner } from "@/utils/providerSigner";
 import { useContext, useEffect, useState } from "react";
 import getDaoContractInstance from "@/utils/getDAOcontract";
-import getNFTContractInstance from "@/utils/getNFTcontract";
-import { getNumProposals } from "@/utils/getNumberOfProposals";
-import { fetchAllProposals } from "@/utils/getProposals";
-import currentAddress from "@/utils/getAddress";
+import { getUserNFTBalance } from "@/utils/getUserNFTBalance";
+import { getNumProposals } from "@/utils/DAO/getNumberOfProposals";
+import { getDAOTreasuryBalance } from "@/utils/DAO/getDAOTreasuryBalance";
+import { getDAOOwner } from "@/utils/DAO/getDAOOwner";
 import Proposals from "./Proposals";
 import Overview from "./Overview";
 import CreateProposal from "./CreateProposal";
@@ -20,17 +19,14 @@ const DAO = () => {
   const [treasuryBalance, setTreasuryBalance] = useState("0");
   // Number of proposals
   const [numProposals, setNumProposals] = useState(0);
-  // array of all proposals created in the DAO
-  const [proposals, setProposals] = useState<any>([]);
   // user's balance of NFT
   const [nftBalance, setNftBalance] = useState(0);
-  // Fake NFT token id to purchase. Used when creating a proposal
-  const [fakeNftTokenId, setFakeNftTokenId] = useState("");
   // One of "Create Proposal", or "Vieve Proposal"
   const [selectedTab, setSelectedTab] = useState("");
   const [loading, setLoading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
 
+  // ___ useEffects ___
   useEffect(() => {
     if (!walletConected) {
       web3modalRef.current = new Web3Modal({
@@ -41,23 +37,21 @@ const DAO = () => {
     }
 
     connectWallet().then(() => {
-      setLoading(true);
-      getDAOTreasuryBalance();
-      getNumProposal();
-      getUserNFTBalance();
-      getDAOOwner();
-      getAllProposals();
-      setLoading(false);
+      fetchDaoData();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConected]);
 
-  useEffect(() => {
-    if (selectedTab === "View Proposals") {
-      getAllProposals(); // fetch all proposals from the DAO
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTab]);
+  const fetchDaoData = async () => {
+    setLoading(true);
+    getTreasuryBalance();
+    getNumProposal();
+    getNFTbalance();
+    getOwner();
+    setLoading(false);
+  };
+
+  // ___ Utils ___
 
   const connectWallet = async () => {
     try {
@@ -68,71 +62,28 @@ const DAO = () => {
     }
   };
 
-  const getDAOOwner = async () => {
+  const getNFTbalance = async () => {
     try {
-      // initiate signer - we will write into the contract
-      const signer = await getProviderOrSigner({
-        needSigner: true,
-        web3modalRef,
-      });
-      // contract instance
-      const contract = await getDaoContractInstance(signer);
-      // get owner of DAO
-      const _owner = await contract.owner();
-      // get current wallet address
-      const address = await currentAddress(signer);
-      if (address.toLowerCase() === _owner.toLowerCase()) {
-        setIsOwner(true);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const withdrawDAOEther = async () => {
-    try {
-      const signer = await getProviderOrSigner({
-        needSigner: true,
-        web3modalRef,
-      });
-      const contract = await getDaoContractInstance(signer);
-      const tx = await contract.withdraw();
-      setLoading(true);
-      await tx.wait();
-      setLoading(false);
-      getDAOTreasuryBalance();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // Read ETH balance from the DAO contract address and set it to state
-  const getDAOTreasuryBalance = async () => {
-    try {
-      const provider = await getProviderOrSigner({
-        needSigner: false,
-        web3modalRef,
-      });
-      const balance = await provider.getBalance(
-        CRYPTODEVS_DAO_CONTRACT_ADDRESS
-      );
-      setTreasuryBalance(balance.toString());
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // Read the balance of user's NFT and set to state
-  const getUserNFTBalance = async () => {
-    try {
-      const signer = await getProviderOrSigner({
-        needSigner: true,
-        web3modalRef,
-      });
-      const contract = await getNFTContractInstance(signer);
-      const address = await currentAddress(signer);
-      const balance = await contract.balanceOf(address);
+      const balance = await getUserNFTBalance(web3modalRef);
       setNftBalance(balance.toString());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getOwner = async () => {
+    try {
+      const isOwner = await getDAOOwner(web3modalRef);
+      setIsOwner(isOwner);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getTreasuryBalance = async () => {
+    try {
+      const balance = await getDAOTreasuryBalance(web3modalRef);
+      setTreasuryBalance(balance.toString());
     } catch (err) {
       console.log(err);
     }
@@ -147,14 +98,26 @@ const DAO = () => {
     }
   };
 
-  const getAllProposals = async () => {
+  // ___ Withdraw ___
+
+  const withdrawDAOEther = async () => {
     try {
-      const proposals = await fetchAllProposals(web3modalRef, numProposals);
-      setProposals(proposals);
+      const signer = await getProviderOrSigner({
+        needSigner: true,
+        web3modalRef,
+      });
+      const contract = await getDaoContractInstance(signer);
+      const tx = await contract.withdraw();
+      setLoading(true);
+      await tx.wait();
+      setLoading(false);
+      getTreasuryBalance();
     } catch (err) {
       console.log(err);
     }
   };
+
+  // ___ Render ___
 
   const renderDAOContent = () => {
     if (selectedTab === "Create Proposal") {
@@ -168,7 +131,7 @@ const DAO = () => {
     } else if (selectedTab == "View Proposals") {
       return (
         <Proposals
-          getDAOTreasuryBalance={getDAOTreasuryBalance}
+          getTreasuryBalance={getTreasuryBalance}
           numProposals={numProposals}
           setSelectedTab={setSelectedTab}
         />
