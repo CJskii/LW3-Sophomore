@@ -1,18 +1,14 @@
-import { NFT_CONTRACT_ADDRESS, abi } from "@/constants/NFTcollection";
-import {
-  CRYPTODEVS_DAO_CONTRACT_ADDRESS,
-  CRYPTODEVS_DAO_CONTRACT_ABI,
-} from "@/constants/DAO";
-import { formatEther } from "ethers/lib/utils";
+import { CRYPTODEVS_DAO_CONTRACT_ADDRESS } from "@/constants/DAO";
 import { web3ModalContext } from "@/pages/_app";
 import Web3Modal from "web3modal";
 import { walletContext } from "@/pages/_app";
 import { getProviderOrSigner } from "@/helpers/providerSigner";
 import { useContext, useEffect, useState } from "react";
-import Image from "next/image";
 import getDaoContractInstance from "@/helpers/getDAOcontract";
 import getNFTContractInstance from "@/helpers/getNFTcontract";
 import currentAddress from "@/helpers/getAddress";
+import Proposals from "./Proposals";
+import Overview from "./Overview";
 
 const DAO = () => {
   const [web3modalRef, setWeb3ModalRef] = useContext(web3ModalContext);
@@ -48,12 +44,14 @@ const DAO = () => {
       getDAOOwner();
       fetchAllProposals();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConected]);
 
   useEffect(() => {
     if (selectedTab === "View Proposals") {
       fetchAllProposals(); // fetch all proposals from the DAO
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab]);
 
   const connectWallet = async () => {
@@ -150,24 +148,6 @@ const DAO = () => {
     }
   };
 
-  // Calls the 'createProposal' function in the DAO contract using tokenID from fakeNFTTokenID state
-  const createProposal = async () => {
-    try {
-      const signer = await getProviderOrSigner({
-        needSigner: true,
-        web3modalRef,
-      });
-      const contract = await getDaoContractInstance(signer);
-      const tx = await contract.createProposal(fakeNftTokenId);
-      setLoading(true);
-      await tx.wait();
-      getNumProposals();
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   // helper function to fetch and parse one proposal from the DAO contract
   // given the proposal ID
   // converts returned data into a javascript object with values we can use
@@ -209,57 +189,6 @@ const DAO = () => {
     }
   };
 
-  // calls the 'voteOnProposal' function in the DAO contract
-  // given the proposal ID and vote type
-  const voteOnProposal = async (id: number, _vote: string) => {
-    try {
-      const signer = await getProviderOrSigner({
-        needSigner: true,
-        web3modalRef,
-      });
-      let vote = _vote === "YAY" ? 1 : 0;
-      const contract = await getDaoContractInstance(signer);
-      const tx = await contract.voteOnProposal(id, vote);
-      setLoading(true);
-      await tx.wait();
-      setLoading(false);
-      await fetchAllProposals();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // calls the 'executeProposal' function in the DAO contract
-  // given the proposal ID
-  const executeProposal = async (proposalId: number) => {
-    try {
-      const signer = await getProviderOrSigner({
-        needSigner: true,
-        web3modalRef,
-      });
-      const contract = await getDaoContractInstance(signer);
-      const tx = await contract.executeProposal(proposalId);
-      setLoading(true);
-      await tx.wait();
-      setLoading(false);
-      await fetchAllProposals();
-      await getDAOTreasuryBalance();
-    } catch (err: any) {
-      console.log(err);
-      window.alert(err.reason);
-    }
-  };
-
-  // Render the contents of the appropriate tab based on `selectedTab`
-  function renderTabs() {
-    if (selectedTab === "Create Proposal") {
-      return renderCreateProposalTab();
-    } else if (selectedTab === "View Proposals") {
-      return renderViewProposalsTab();
-    }
-    return null;
-  }
-
   // Renders the 'Create Proposal' tab content
   function renderCreateProposalTab() {
     if (loading) {
@@ -285,136 +214,50 @@ const DAO = () => {
             />
           </div>
 
-          <button className="btn" onClick={createProposal}>
+          {/* <button className="btn" onClick={createProposal}>
             Create
-          </button>
+          </button> */}
         </div>
       );
     }
   }
 
-  // Renders the 'View Proposals' tab content
-  function renderViewProposalsTab() {
-    if (loading) {
+  const renderDAOContent = () => {
+    console.log(selectedTab);
+    if (selectedTab === "Create Proposal") {
+      // create proposal
+    } else if (selectedTab == "View Proposals") {
+      // view proposals
       return (
-        <div className="btn loading col-span-2 self-center place-self-center">
-          Waiting for txn...
-        </div>
-      );
-    } else if (proposals.length === 0) {
-      return (
-        <div className="col-span-2 self-center place-self-center mb-4 text-xl text-rose-600 bg-slate-800 p-4 rounded">
-          No proposals have been created
-        </div>
+        <Proposals
+          getDAOTreasuryBalance={getDAOTreasuryBalance}
+          numProposals={numProposals}
+          setSelectedTab={setSelectedTab}
+        />
       );
     } else {
-      console.log(proposals);
-      return (
-        <div className="">
-          {proposals.map((p: any, index: number) => (
-            <div key={index} className="">
-              <p>Proposal ID: {p.proposalId.toString()}</p>
-              <p>Fake NFT to Purchase: {p.nftTokenId}</p>
-              <p>Deadline: {p.deadline.toLocaleString()}</p>
-              <p>Yay Votes: {p.yayVotes}</p>
-              <p>Nay Votes: {p.nayVotes}</p>
-              <p>Executed?: {p.executed.toString()}</p>
-              {p.deadline.getTime() > Date.now() && !p.executed ? (
-                <div className="">
-                  <button
-                    className="btn"
-                    onClick={() => voteOnProposal(p.proposalId, "YAY")}
-                  >
-                    Vote YAY
-                  </button>
-                  <button
-                    className="btn"
-                    onClick={() => voteOnProposal(p.proposalId, "NAY")}
-                  >
-                    Vote NAY
-                  </button>
-                </div>
-              ) : p.deadline.getTime() < Date.now() && !p.executed ? (
-                <div className="">
-                  <button
-                    className="btn"
-                    onClick={() => executeProposal(p.proposalId)}
-                  >
-                    Execute Proposal{" "}
-                    {p.yayVotes > p.nayVotes ? "(YAY)" : "(NAY)"}
-                  </button>
-                </div>
-              ) : (
-                <div className="">Proposal Executed</div>
-              )}
-            </div>
-          ))}
-        </div>
-      );
+      const overviewProps = {
+        nftBalance,
+        numProposals,
+        treasuryBalance,
+        isOwner,
+        loading,
+        withdrawDAOEther,
+        setSelectedTab,
+      };
+      return <Overview {...overviewProps} />;
     }
-  }
+  };
 
   return (
     <div className="w-full h-full grid grid-rows-4 md:grid-rows-6 max-sm:grid-rows-8 grid-cols-12 grid-flow-rows pt-2 gap-8">
       <h1 className="text-5xl font-montserrat font-bold self-center place-self-center col-start-1 col-span-12 max-lg:row-span-1 max-sm:row-span-1 text-center max-sm:col-start-1 max-sm:text-4xl">
         DAO dApp
       </h1>
-      <div className="row-start-2 row-span-4 col-start-2 xl:col-start-3 col-span-10 xl:col-span-8 max-lg:row-start-2 max-sm:row-start-2 max-lg:col-start-1 max-lg:col-span-12 max-sm:col-span-12 max-[320px]:col-span-11 max-lg:m-2 grid grid-flow-row gap-8 bg-indigo-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 border border-gray-100">
-        <div className="w-fit h-full font-roboto flex flex-col justify-center items-center gap-4 xl:items-start text-yellow-400 self-center place-self-center p-8 max-sm:px-0 text-center">
-          <h1 className="text-3xl lg:text-4xl text-blue-200 text-center">
-            Welcome to Crypto Devs DAO!
-          </h1>
-          <div className="text-xl text-blue-200 text-left">
-            Your CryptoDevs NFT Balance: {nftBalance}
-            <br></br>
-            Total Number of Proposals: {numProposals}
-          </div>
-          <div className="italic text-lg text-wine max-sm:px-2">
-            Treasury Balance: {formatEther(treasuryBalance)} ETH
-          </div>
-
-          <div className="flex flex-col justify-center items-center gap-4">
-            <div className="flex justify-center items-center gap-2 max-md:flex-col">
-              <button
-                className="btn"
-                onClick={() => setSelectedTab("Create Proposal")}
-              >
-                Create Proposal
-              </button>
-              <button
-                className="btn"
-                onClick={() => setSelectedTab("View Proposals")}
-              >
-                View Proposals
-              </button>
-            </div>
-
-            <div>
-              {isOwner ? (
-                <div>
-                  {loading ? (
-                    <button className="btn loading">Loading...</button>
-                  ) : (
-                    <button className="btn" onClick={withdrawDAOEther}>
-                      Withdraw DAO ETH
-                    </button>
-                  )}
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="p-8 max-lg:w-[300px] max-lg:h-[300px] lg:w-[400px] lg:h-[400px] w-[500px] h-[500px] flex justify-center items-center col-start-2 max-sm:hidden">
-          <Image
-            src={`./cryptodevs/${Math.floor(Math.random() * 20)}.svg`}
-            alt="0"
-            width={250}
-            height={250}
-          />
-        </div>
-        {renderTabs()}
+      <div className="h-full min-h-[400px] row-start-2 row-span-4 col-start-2 xl:col-start-3 col-span-10 xl:col-span-8 max-lg:row-start-2 max-sm:row-start-2 max-lg:col-start-1 max-lg:col-span-12 max-sm:col-span-12 max-[320px]:col-span-11 max-lg:m-2 grid grid-flow-row gap-8 bg-indigo-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 border border-gray-100">
+        {/* 
+        {renderTabs()} */}
+        {renderDAOContent()}
       </div>
     </div>
   );
