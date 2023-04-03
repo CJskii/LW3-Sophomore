@@ -46,6 +46,7 @@ const DAO = () => {
       getNumProposals();
       getUserNFTBalance();
       getDAOOwner();
+      fetchAllProposals();
     });
   }, [walletConected]);
 
@@ -272,7 +273,7 @@ const DAO = () => {
       );
     } else {
       return (
-        <div className="flex justify-center items-center gap-2 col-span-2 mb-4 bg-slate-800 w-fit place-self-center p-2 rounded">
+        <div className="flex justify-center max-sm:flex-col items-center gap-2 md:col-span-2 mb-4 bg-slate-800 w-fit place-self-center p-2 rounded">
           <div className="flex flex-col justify-start items-center">
             <label className="text-white">
               Fake NFT Token ID to Purchase:{" "}
@@ -295,7 +296,11 @@ const DAO = () => {
   // Renders the 'View Proposals' tab content
   function renderViewProposalsTab() {
     if (loading) {
-      return <div className="btn loading col-span-2">Waiting for txn...</div>;
+      return (
+        <div className="btn loading col-span-2 self-center place-self-center">
+          Waiting for txn...
+        </div>
+      );
     } else if (proposals.length === 0) {
       return (
         <div className="col-span-2 self-center place-self-center mb-4 text-xl text-rose-600 bg-slate-800 p-4 rounded">
@@ -303,11 +308,12 @@ const DAO = () => {
         </div>
       );
     } else {
+      console.log(proposals);
       return (
-        <div>
-          {proposals.map(({ p, index }: { p: any; index: number }) => (
+        <div className="">
+          {proposals.map((p: any, index: number) => (
             <div key={index} className="">
-              <p>Proposal ID: {p.proposalId}</p>
+              <p>Proposal ID: {p.proposalId.toString()}</p>
               <p>Fake NFT to Purchase: {p.nftTokenId}</p>
               <p>Deadline: {p.deadline.toLocaleString()}</p>
               <p>Yay Votes: {p.yayVotes}</p>
