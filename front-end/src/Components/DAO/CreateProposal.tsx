@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useContext, useState } from "react";
-import { getProviderOrSigner } from "@/helpers/providerSigner";
-import getDaoContractInstance from "@/helpers/getDAOcontract";
+import { getProviderOrSigner } from "@/utils/providerSigner";
+import getDaoContractInstance from "@/utils/getDAOcontract";
 import { web3ModalContext } from "@/pages/_app";
 
 interface Props {

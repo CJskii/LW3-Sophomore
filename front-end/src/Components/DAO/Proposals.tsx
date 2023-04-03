@@ -1,8 +1,9 @@
 import { useState, useContext, useEffect } from "react";
-import { getProviderOrSigner } from "@/helpers/providerSigner";
-import getDaoContractInstance from "@/helpers/getDAOcontract";
+import { getProviderOrSigner } from "@/utils/providerSigner";
+import getDaoContractInstance from "@/utils/getDAOcontract";
 import { web3ModalContext } from "@/pages/_app";
 import { motion } from "framer-motion";
+import { getNumProposals } from "@/utils/getNumberOfProposals";
 
 interface Props {
   numProposals: number;

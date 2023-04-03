@@ -2,11 +2,13 @@ import { CRYPTODEVS_DAO_CONTRACT_ADDRESS } from "@/constants/DAO";
 import { web3ModalContext } from "@/pages/_app";
 import Web3Modal from "web3modal";
 import { walletContext } from "@/pages/_app";
-import { getProviderOrSigner } from "@/helpers/providerSigner";
+import { getProviderOrSigner } from "@/utils/providerSigner";
 import { useContext, useEffect, useState } from "react";
-import getDaoContractInstance from "@/helpers/getDAOcontract";
-import getNFTContractInstance from "@/helpers/getNFTcontract";
-import currentAddress from "@/helpers/getAddress";
+import getDaoContractInstance from "@/utils/getDAOcontract";
+import getNFTContractInstance from "@/utils/getNFTcontract";
+import { getNumProposals } from "@/utils/getNumberOfProposals";
+import { fetchAllProposals } from "@/utils/getProposals";
+import currentAddress from "@/utils/getAddress";
 import Proposals from "./Proposals";
 import Overview from "./Overview";
 import CreateProposal from "./CreateProposal";
@@ -41,21 +43,21 @@ const DAO = () => {
     connectWallet().then(() => {
       setLoading(true);
       getDAOTreasuryBalance();
-      getNumProposals();
+      getNumProposal();
       getUserNFTBalance();
       getDAOOwner();
-      fetchAllProposals();
+      //fetchAllProposals();
       setLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConected]);
 
-  useEffect(() => {
-    if (selectedTab === "View Proposals") {
-      fetchAllProposals(); // fetch all proposals from the DAO
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTab]);
+  // useEffect(() => {
+  //   if (selectedTab === "View Proposals") {
+  //     fetchAllProposals(); // fetch all proposals from the DAO
+  //   }
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedTab]);
 
   const connectWallet = async () => {
     try {
@@ -120,21 +122,6 @@ const DAO = () => {
     }
   };
 
-  // Read number of proposals from the DAO contract and set it to state
-  const getNumProposals = async () => {
-    try {
-      const provider = await getProviderOrSigner({
-        needSigner: false,
-        web3modalRef,
-      });
-      const contract = await getDaoContractInstance(provider);
-      const daoNumProposals = await contract.numProposals();
-      setNumProposals(daoNumProposals.toString());
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   // Read the balance of user's NFT and set to state
   const getUserNFTBalance = async () => {
     try {
@@ -151,42 +138,19 @@ const DAO = () => {
     }
   };
 
-  // helper function to fetch and parse one proposal from the DAO contract
-  // given the proposal ID
-  // converts returned data into a javascript object with values we can use
-  const fetchProposalById = async (id: number) => {
+  const getNumProposal = async () => {
     try {
-      const provider = await getProviderOrSigner({
-        needSigner: false,
-        web3modalRef,
-      });
-      const contract = await getDaoContractInstance(provider);
-      const proposal = await contract.proposals(id);
-      const parsedProposal = {
-        proposalId: id,
-        nftTokenId: proposal.nftTokenId.toString(),
-        deadline: new Date(parseInt(proposal.deadline.toString()) * 1000),
-        yayVotes: proposal.yayVotes.toString(),
-        nayVotes: proposal.nayVotes.toString(),
-        executed: proposal.executed,
-      };
-      return parsedProposal;
+      const number = await getNumProposals(web3modalRef);
+      setNumProposals(number.toString());
     } catch (err) {
       console.log(err);
     }
   };
 
-  // runs a loop to fetch all proposals from the DAO contract
-  // and sets the proposals state to an array of all proposals
-  const fetchAllProposals = async () => {
+  const getAllProposls = async () => {
     try {
-      const proposals = [];
-      for (let i = 0; i < numProposals; i++) {
-        const proposal = await fetchProposalById(i);
-        proposals.push(proposal);
-      }
+      const proposals = await fetchAllProposals(web3modalRef, numProposals);
       setProposals(proposals);
-      return proposals;
     } catch (err) {
       console.log(err);
     }

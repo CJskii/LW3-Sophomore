@@ -7,7 +7,7 @@ import {
   TOKEN_CONTRACT_ABI,
 } from "@/constants/DevToken";
 import { walletContext, web3ModalContext } from "@/pages/_app";
-import { getProviderOrSigner } from "@/helpers/providerSigner";
+import { getProviderOrSigner } from "@/utils/providerSigner";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 

@@ -2,7 +2,7 @@ import { walletContext, web3ModalContext } from "@/pages/_app";
 import React, { useContext, useEffect, useState } from "react";
 import { Contract, utils } from "ethers";
 import { NFT_CONTRACT_ADDRESS, abi } from "../../constants/NFTcollection";
-import { getProviderOrSigner } from "../../helpers/providerSigner";
+import { getProviderOrSigner } from "../../utils/providerSigner";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import Image from "next/image";

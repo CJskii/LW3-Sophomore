@@ -1,7 +1,7 @@
 import { walletContext } from "@/pages/_app";
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Contract } from "ethers";
-import { getProviderOrSigner } from "../../helpers/providerSigner";
+import { getProviderOrSigner } from "../../utils/providerSigner";
 import { web3ModalContext } from "@/pages/_app";
 import { WHITELIST_CONTRACT_ADDRESS, abi } from "../../constants/whitelist";
 import { JsonRpcSigner } from "@ethersproject/providers";

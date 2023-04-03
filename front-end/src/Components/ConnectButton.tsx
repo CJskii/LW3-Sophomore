@@ -1,5 +1,5 @@
 import { walletContext } from "@/pages/_app";
-import { getProviderOrSigner } from "@/helpers/providerSigner";
+import { getProviderOrSigner } from "@/utils/providerSigner";
 import React, { useContext, useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 import { web3ModalContext } from "@/pages/_app";
