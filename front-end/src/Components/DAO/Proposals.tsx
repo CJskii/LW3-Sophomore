@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { getProviderOrSigner } from "@/helpers/providerSigner";
 import getDaoContractInstance from "@/helpers/getDAOcontract";
 import { web3ModalContext } from "@/pages/_app";
+import { motion } from "framer-motion";
 
 interface Props {
   numProposals: number;
@@ -118,10 +119,13 @@ const Proposals = (props: Props) => {
     );
   } else {
     return (
-      <div className="m-2">
+      <motion.div className="m-2">
         <>
           <div className="tabs">
-            <a className="tab tab-lifted text-slate-400 hover:text-slate-200">
+            <a
+              className="tab tab-lifted text-slate-400 hover:text-slate-200"
+              onClick={() => setSelectedTab("")}
+            >
               DAO
             </a>
             <a className="tab tab-lifted tab-active text-white">Proposals</a>
@@ -132,7 +136,31 @@ const Proposals = (props: Props) => {
               Create proposal
             </a>
           </div>
-          <div className="overflow-x-auto w-full">
+          <motion.div
+            initial="initialState"
+            animate="animateState"
+            exit="exitState"
+            transition={{
+              duration: 1,
+            }}
+            variants={{
+              initialState: {
+                opacity: 0,
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+                y: 50,
+              },
+              animateState: {
+                opacity: 1,
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+                y: 0,
+              },
+              exitState: {
+                clipPath: "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)",
+                y: -50,
+              },
+            }}
+            className="overflow-x-auto w-full"
+          >
             <table className="table w-full">
               {/* head */}
               <thead>
@@ -192,44 +220,9 @@ const Proposals = (props: Props) => {
                 ))}
               </tbody>
             </table>
-          </div>
+          </motion.div>
         </>
-        {/* // <div key={index} className=" bg-slate-700 rounded text-white">
-          //   <p>Proposal ID: {p.proposalId.toString()}</p>
-          //   <p>Fake NFT to Purchase: {p.nftTokenId}</p>
-          //   <p>Deadline: {p.deadline.toLocaleString()}</p>
-          //   <p>Yay Votes: {p.yayVotes}</p>
-          //   <p>Nay Votes: {p.nayVotes}</p>
-          //   <p>Executed?: {p.executed.toString()}</p>
-          //   {p.deadline.getTime() > Date.now() && !p.executed ? (
-          //     <div className="">
-          //       <button
-          //         className="btn"
-          //         onClick={() => voteOnProposal(p.proposalId, "YAY")}
-          //       >
-          //         Vote YAY
-          //       </button>
-          //       <button
-          //         className="btn"
-          //         onClick={() => voteOnProposal(p.proposalId, "NAY")}
-          //       >
-          //         Vote NAY
-          //       </button>
-          //     </div>
-          //   ) : p.deadline.getTime() < Date.now() && !p.executed ? (
-          //     <div className="">
-          //       <button
-          //         className="btn"
-          //         onClick={() => executeProposal(p.proposalId)}
-          //       >
-          //         Execute Proposal {p.yayVotes > p.nayVotes ? "(YAY)" : "(NAY)"}
-          //       </button>
-          //     </div>
-          //   ) : (
-          //     <div className="">Proposal Executed</div>
-          //   )}
-          // </div> */}
-      </div>
+      </motion.div>
     );
   }
 };

@@ -9,6 +9,7 @@ import getNFTContractInstance from "@/helpers/getNFTcontract";
 import currentAddress from "@/helpers/getAddress";
 import Proposals from "./Proposals";
 import Overview from "./Overview";
+import CreateProposal from "./CreateProposal";
 
 const DAO = () => {
   const [web3modalRef, setWeb3ModalRef] = useContext(web3ModalContext);
@@ -38,11 +39,13 @@ const DAO = () => {
     }
 
     connectWallet().then(() => {
+      setLoading(true);
       getDAOTreasuryBalance();
       getNumProposals();
       getUserNFTBalance();
       getDAOOwner();
       fetchAllProposals();
+      setLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConected]);
@@ -190,44 +193,17 @@ const DAO = () => {
   };
 
   // Renders the 'Create Proposal' tab content
-  function renderCreateProposalTab() {
-    if (loading) {
-      return <div className="btn loading col-span-2">Waiting for txn...</div>;
-    } else if (nftBalance == 0) {
-      return (
-        <div className="bg-slate-800 place-self-center col-span-2 mb-2 p-2 flex flex-col justify-center items-center text-rose-600 rounded">
-          You do not own any CryptoDevs NFTs. <br />
-          <b>You cannot create or vote on proposals</b>
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex justify-center max-sm:flex-col items-center gap-2 md:col-span-2 mb-4 bg-slate-800 w-fit place-self-center p-2 rounded">
-          <div className="flex flex-col justify-start items-center">
-            <label className="text-white">
-              Fake NFT Token ID to Purchase:{" "}
-            </label>
-            <input
-              placeholder="0"
-              type="number"
-              onChange={(e) => setFakeNftTokenId(e.target.value)}
-            />
-          </div>
-
-          {/* <button className="btn" onClick={createProposal}>
-            Create
-          </button> */}
-        </div>
-      );
-    }
-  }
 
   const renderDAOContent = () => {
-    console.log(selectedTab);
     if (selectedTab === "Create Proposal") {
-      // create proposal
+      return (
+        <CreateProposal
+          setSelectedTab={setSelectedTab}
+          getNumProposalsInDAO={getNumProposals}
+          nftBalance={nftBalance}
+        />
+      );
     } else if (selectedTab == "View Proposals") {
-      // view proposals
       return (
         <Proposals
           getDAOTreasuryBalance={getDAOTreasuryBalance}
@@ -255,8 +231,6 @@ const DAO = () => {
         DAO dApp
       </h1>
       <div className="h-full min-h-[400px] row-start-2 row-span-4 col-start-2 xl:col-start-3 col-span-10 xl:col-span-8 max-lg:row-start-2 max-sm:row-start-2 max-lg:col-start-1 max-lg:col-span-12 max-sm:col-span-12 max-[320px]:col-span-11 max-lg:m-2 grid grid-flow-row gap-8 bg-indigo-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 border border-gray-100">
-        {/* 
-        {renderTabs()} */}
         {renderDAOContent()}
       </div>
     </div>

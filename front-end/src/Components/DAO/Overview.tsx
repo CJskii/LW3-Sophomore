@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { formatEther } from "ethers/lib/utils";
+import { motion } from "framer-motion";
 
 interface Props {
   nftBalance: number;
@@ -23,7 +24,31 @@ const Overview = (props: Props) => {
   } = props;
   return (
     <>
-      <div className="w-fit h-full font-roboto flex flex-col justify-center items-center gap-4 xl:items-start text-yellow-400 self-center place-self-center p-8 max-sm:px-0 text-center">
+      <motion.div
+        initial="initialState"
+        animate="animateState"
+        exit="exitState"
+        transition={{
+          duration: 1,
+        }}
+        variants={{
+          initialState: {
+            opacity: 0,
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+            y: 50,
+          },
+          animateState: {
+            opacity: 1,
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+            y: 0,
+          },
+          exitState: {
+            clipPath: "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)",
+            y: -50,
+          },
+        }}
+        className="w-fit h-full font-roboto flex flex-col justify-center items-center gap-4 xl:items-start text-yellow-400 self-center place-self-center p-8 max-sm:px-0 text-center"
+      >
         <h1 className="text-3xl lg:text-4xl text-blue-200 text-center">
           Welcome to Crypto Devs DAO!
         </h1>
@@ -68,15 +93,22 @@ const Overview = (props: Props) => {
             )}
           </div>
         </div>
-      </div>
-      <div className="p-8 max-lg:w-[300px] max-lg:h-[300px] lg:w-[400px] lg:h-[400px] w-[500px] h-[500px] flex justify-center items-center col-start-2 max-sm:hidden">
+      </motion.div>
+      <motion.div
+        initial={{ y: 5, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{
+          duration: 1,
+        }}
+        className="p-8 max-lg:w-[300px] max-lg:h-[300px] lg:w-[400px] lg:h-[400px] w-[500px] h-[500px] flex justify-center items-center col-start-2 max-sm:hidden"
+      >
         <Image
           src={`./cryptodevs/${Math.floor(Math.random() * 20)}.svg`}
           alt="0"
           width={250}
           height={250}
         />
-      </div>
+      </motion.div>
     </>
   );
 };
