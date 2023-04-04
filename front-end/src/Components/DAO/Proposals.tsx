@@ -43,6 +43,7 @@ const Proposals = (props: Props) => {
       });
       let vote = _vote === "YAY" ? 1 : 0;
       const contract = await getDaoContractInstance(signer);
+      console.log({ id, vote });
       const tx = await contract.voteOnProposal(id, vote);
       setLoading(true);
       await tx.wait();
@@ -89,7 +90,7 @@ const Proposals = (props: Props) => {
       );
     } else {
       return (
-        <motion.div className="m-2">
+        <motion.div className="m-2 flex flex-col justify-center items-start w-full overflow-x-auto">
           <>
             <div className="tabs">
               <a
@@ -129,7 +130,7 @@ const Proposals = (props: Props) => {
                   y: -50,
                 },
               }}
-              className="overflow-x-auto w-full"
+              className="overflow-x-auto h-[350px] overflow-y-auto w-full"
             >
               <table className="table w-full">
                 {/* head */}
@@ -170,7 +171,7 @@ const Proposals = (props: Props) => {
                               Vote YAY
                             </button>
                             <button
-                              className="btn"
+                              className="btn ml-2"
                               onClick={() =>
                                 voteOnProposal(p.proposalId, "NAY")
                               }
@@ -187,7 +188,9 @@ const Proposals = (props: Props) => {
                             {p.yayVotes > p.nayVotes ? "(YAY)" : "(NAY)"}
                           </button>
                         ) : (
-                          <div className="">Proposal Executed</div>
+                          <div className="text-blue-200 ">
+                            Proposal Executed
+                          </div>
                         )}
                       </td>
                     </tr>

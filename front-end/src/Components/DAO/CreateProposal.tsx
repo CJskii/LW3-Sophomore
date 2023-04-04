@@ -48,13 +48,14 @@ const CreateProposal = (props: Props) => {
       return (
         <div className="flex justify-center max-sm:flex-col items-center gap-2 md:col-span-2 mb-4 bg-slate-800 w-fit place-self-center p-2 rounded">
           <div className="flex flex-col justify-start items-center">
-            <label className="text-white">
+            <label className="text-white mb-2">
               Fake NFT Token ID to Purchase:{" "}
             </label>
             <input
               placeholder="0"
               type="number"
               onChange={(e) => setFakeNftTokenId(e.target.value)}
+              className="text-white px-2"
             />
           </div>
 
@@ -111,7 +112,7 @@ const CreateProposal = (props: Props) => {
             y: -50,
           },
         }}
-        className="flex justify-center max-sm:flex-col items-center gap-2 md:col-span-2 mb-4 bg-slate-800 w-fit place-self-center p-2 rounded"
+        className="flex justify-center max-sm:flex-col items-center gap-2 md:col-span-2 mb-4 bg-slate-800 w-fit self-center place-self-center p-2 rounded"
       >
         {renderCreateProposalTab()}
       </motion.div>
