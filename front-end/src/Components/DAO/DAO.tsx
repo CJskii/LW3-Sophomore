@@ -3,7 +3,7 @@ import Web3Modal from "web3modal";
 import { walletContext } from "@/pages/_app";
 import { getProviderOrSigner } from "@/utils/providerSigner";
 import { useContext, useEffect, useState } from "react";
-import getDaoContractInstance from "@/utils/getDAOcontract";
+import getDaoContractInstance from "@/utils/contract/getDAOcontract";
 import { getUserNFTBalance } from "@/utils/getUserNFTBalance";
 import { getNumProposals } from "@/utils/DAO/getNumberOfProposals";
 import { getDAOTreasuryBalance } from "@/utils/DAO/getDAOTreasuryBalance";

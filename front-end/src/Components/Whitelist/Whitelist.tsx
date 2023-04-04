@@ -1,12 +1,11 @@
 import { walletContext } from "@/pages/_app";
-import React, { useContext, useEffect, useState, useRef } from "react";
-import { Contract } from "ethers";
+import React, { useContext, useEffect, useState } from "react";
 import { getProviderOrSigner } from "../../utils/providerSigner";
 import { web3ModalContext } from "@/pages/_app";
-import { WHITELIST_CONTRACT_ADDRESS, abi } from "../../constants/whitelist";
-import { JsonRpcSigner } from "@ethersproject/providers";
+import currentAddress from "@/utils/getAddress";
 import WhitelistHeader from "./Header";
 import Image from "next/image";
+import getWhitelistContractInstance from "@/utils/contract/getWhitelistcontract";
 
 const Whitelist = () => {
   const [walletConnected, setWalletConnected] = useContext(walletContext);
@@ -18,7 +17,8 @@ const Whitelist = () => {
   useEffect(() => {
     getNumberOfWhitelisted();
     checkIfAddressInWhitelist();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletConnected]);
 
   const addAddressToWhitelist = async () => {
     try {
@@ -29,11 +29,7 @@ const Whitelist = () => {
       });
 
       // initiate contract instance
-      const whitelistContract = new Contract(
-        WHITELIST_CONTRACT_ADDRESS,
-        abi,
-        signer
-      );
+      const whitelistContract = getWhitelistContractInstance(signer);
 
       // initiate adding address to whitelist on contract
       const tx = await whitelistContract.addAddressToWhitelist();
@@ -60,11 +56,7 @@ const Whitelist = () => {
       });
 
       //initiate contract instance - gas free
-      const whitelistContract = new Contract(
-        WHITELIST_CONTRACT_ADDRESS,
-        abi,
-        provider
-      );
+      const whitelistContract = getWhitelistContractInstance(provider);
 
       // read from the contract number of whitelisted addresses
       const _numberOfWhitelisted =
@@ -83,13 +75,9 @@ const Whitelist = () => {
         needSigner: true,
         web3modalRef,
       });
-      const whitelistContract = new Contract(
-        WHITELIST_CONTRACT_ADDRESS,
-        abi,
-        signer
-      );
+      const whitelistContract = getWhitelistContractInstance(signer);
 
-      const address = await (signer as JsonRpcSigner).getAddress();
+      const address = await currentAddress(signer);
 
       const _joinedWhitelist = await whitelistContract.whitelistedAddresses(
         address

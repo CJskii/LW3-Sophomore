@@ -1,11 +1,7 @@
-import { Contract, BigNumber, utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  NFT_CONTRACT_ADDRESS,
-  TOKEN_CONTRACT_ADDRESS,
-  NFT_CONTRACT_ABI,
-  TOKEN_CONTRACT_ABI,
-} from "@/constants/DevToken";
+import getNFTContractInstance from "@/utils/contract/getNFTcontract";
+import getTokenContractInstance from "@/utils/contract/getTokencontract";
 import { walletContext, web3ModalContext } from "@/pages/_app";
 import { getProviderOrSigner } from "@/utils/providerSigner";
 import { JsonRpcSigner } from "@ethersproject/providers";
@@ -57,6 +53,7 @@ const ICO = () => {
       setCurrentAddress(address);
     }, 5000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -87,18 +84,10 @@ const ICO = () => {
       });
 
       // create instance of NFT contract
-      const nftContract = new Contract(
-        NFT_CONTRACT_ADDRESS,
-        NFT_CONTRACT_ABI,
-        provider
-      );
+      const nftContract = getNFTContractInstance(provider);
 
       // create instance of Token contract
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        provider
-      );
+      const tokenContract = getTokenContractInstance(provider);
 
       // get signer - we use this to extract currently connected wallet address
       const signer = await getProviderOrSigner({
@@ -145,11 +134,7 @@ const ICO = () => {
       });
 
       // create token contract instance
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        provider
-      );
+      const tokenContract = getTokenContractInstance(provider);
 
       // get signer - we use this to extract currently connected wallet address
       const signer = await getProviderOrSigner({
@@ -179,11 +164,7 @@ const ICO = () => {
       });
 
       // create token contract instance
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        signer
-      );
+      const tokenContract = getTokenContractInstance(signer);
       // each token value is 0.001 ether
       const value = amount * 0.001;
       // mint 'amount' of tokens
@@ -215,11 +196,7 @@ const ICO = () => {
       });
 
       // create token contract instance
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        signer
-      );
+      const tokenContract = getTokenContractInstance(signer);
 
       const tx = await tokenContract.claim();
       setLoading(true);
@@ -246,11 +223,7 @@ const ICO = () => {
       });
 
       // create token contract instance
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        provider
-      );
+      const tokenContract = getTokenContractInstance(provider);
 
       // retrieve total supply from the contract
       const _tokensMinted = await tokenContract.totalSupply();
@@ -272,11 +245,7 @@ const ICO = () => {
       });
 
       // create token contract instance
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        provider
-      );
+      const tokenContract = getTokenContractInstance(provider);
 
       // call owner instance
       const _owner = await tokenContract.owner();
@@ -308,11 +277,7 @@ const ICO = () => {
       });
 
       // create token contract instance
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        signer
-      );
+      const tokenContract = getTokenContractInstance(signer);
 
       // call withdraw function
       const tx = await tokenContract.withdraw();

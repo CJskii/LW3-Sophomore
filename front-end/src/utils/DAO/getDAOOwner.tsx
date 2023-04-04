@@ -1,5 +1,5 @@
 import { getProviderOrSigner } from "../providerSigner";
-import getDaoContractInstance from "../getDAOcontract";
+import getDaoContractInstance from "../contract/getDAOcontract";
 import currentAddress from "../getAddress";
 
 export const getDAOOwner = async (web3modalRef: any) => {

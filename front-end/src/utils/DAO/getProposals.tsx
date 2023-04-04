@@ -1,5 +1,5 @@
 import { getProviderOrSigner } from "../providerSigner";
-import getDaoContractInstance from "../getDAOcontract";
+import getDaoContractInstance from "../contract/getDAOcontract";
 // helper function to fetch and parse one proposal from the DAO contract
 // given the proposal ID
 // converts returned data into a javascript object with values we can use

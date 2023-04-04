@@ -1,5 +1,5 @@
 import { getProviderOrSigner } from "./providerSigner";
-import getNFTContractInstance from "./getNFTcontract";
+import getNFTContractInstance from "./contract/getNFTcontract";
 import currentAddress from "@/utils/getAddress";
 // Read the balance of user's NFT and set to state
 export const getUserNFTBalance = async (web3modalRef: any) => {

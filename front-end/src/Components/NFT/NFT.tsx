@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Contract, utils } from "ethers";
 import { NFT_CONTRACT_ADDRESS, abi } from "../../constants/NFTcollection";
 import { getProviderOrSigner } from "../../utils/providerSigner";
+import getNFTContractInstance from "@/utils/contract/getNFTcontract";
 import { JsonRpcSigner } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import Image from "next/image";
@@ -33,15 +34,6 @@ const NFT = () => {
   }, []);
 
   useEffect(() => {
-    // Check if presale has started
-    // const checkPresale = async () => {
-    //   const _presaleStarted = await checkIfPresaleStarted();
-    //   if (_presaleStarted) {
-    //     checkIfPresaleEnded();
-    //   }
-    // };
-
-    // checkPresale();
     getTokenIdsMinted();
 
     // Interval to call and check every 5 seconds if presale has ended
@@ -81,7 +73,7 @@ const NFT = () => {
       });
 
       // initiate instance of NFT contract
-      const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
+      const nftContract = getNFTContractInstance(signer);
 
       // on the instance of our contract initiate presaleMint function call
       const tx = await nftContract.presaleMint({
@@ -111,7 +103,7 @@ const NFT = () => {
       });
 
       // initiate instance of NFT contract
-      const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
+      const nftContract = getNFTContractInstance(signer);
       // on the instance of our contract initiate presaleMint function call
       const tx = await nftContract.mint({
         // we using using.parseEther from ethers library to change our human readable number to EVM number
@@ -141,7 +133,7 @@ const NFT = () => {
       });
 
       // initiate instance of our contract
-      const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
+      const nftContract = getNFTContractInstance(signer);
       // on instance of our contract initiate presale by calling startPresale function
       const tx = await nftContract.startPresale();
       // display loading message
@@ -167,7 +159,7 @@ const NFT = () => {
       });
 
       // initiate instance of NFT contract
-      const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, provider);
+      const nftContract = getNFTContractInstance(provider);
       // on instance of our contract initiate reading of presaleStarted boolean
       const _presaleStarted = await nftContract.presaleStarted();
 
@@ -191,7 +183,7 @@ const NFT = () => {
       });
 
       // initiate instance of NFT contract
-      const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, provider);
+      const nftContract = getNFTContractInstance(provider);
       // on instance of our contract initiate reading of presaleEnded boolean
       const _presaleEnded = await nftContract.presaleEnded();
 
@@ -222,7 +214,7 @@ const NFT = () => {
       });
 
       // initiate instance of NFT contract
-      const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, provider);
+      const nftContract = getNFTContractInstance(provider);
       // on instance of our contract initiate call to owner() function
       const _owner = await nftContract.owner();
 
@@ -252,7 +244,7 @@ const NFT = () => {
     });
 
     // initiate instance of NFT contract
-    const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, provider);
+    const nftContract = getNFTContractInstance(provider);
     // on instance of our contract initiate call to tokenIds() variable
     // when calling tokenIds() function, it returns an array of BigNumber objects
     const _tokenIds = await nftContract.tokenIds();

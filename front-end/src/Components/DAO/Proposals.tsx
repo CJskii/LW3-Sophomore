@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { getProviderOrSigner } from "@/utils/providerSigner";
-import getDaoContractInstance from "@/utils/getDAOcontract";
+import getDaoContractInstance from "@/utils/contract/getDAOcontract";
 import { web3ModalContext } from "@/pages/_app";
 import { motion } from "framer-motion";
 import { fetchAllProposals } from "@/utils/DAO/getProposals";
