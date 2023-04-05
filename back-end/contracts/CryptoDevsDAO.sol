@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 interface IFakeNFTMarketplace {
     /// dev purchase() purchases an NFT from the FakeNFTMarketplace
     /// param _tokenId - the fake NFT tokenID to purchase
-    function purchase(uint256 _tokenId) external payable;
+    function buy(uint256 _tokenId) external payable;
     /// dev - getPrice() returns the price of an NFT from the FakeNFTMarketplace
     /// return - Returns the price in Wei for an NFT
     function getPrice() external view returns (uint256);
@@ -25,7 +25,7 @@ interface ICryptoDevsNFT {
     /// param owner - address to fetch the NFT TokenID for
     /// param index - index of NFT in owned tokens array to fetch
     /// return Returns the TokenID of the NFT
-    function tokenOwnerByIndex(address owner, uint256 index) external view returns (uint256);
+    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256);
 }
 
 // Create a struct named Proposal containing all relevant information
@@ -82,16 +82,16 @@ contract CryptoDevsDAO is Ownable {
         _;
     }
 
-    enum Vote {Yay, Nay}
+    enum Vote {YAY, NAY}
 
     function voteOnProposal(uint256 proposalIndex, Vote vote) external nftHolderOnly activeProposalOnly(proposalIndex) {
         Proposal storage proposal = proposals[proposalIndex];
         
         uint256 voterNFTbalance = cryptoDevsNFT.balanceOf(msg.sender);
-        uint numVotes = 0;
+        uint256 numVotes = 0;
 
-        for (uint i = 0; i < voterNFTbalance; i++) {
-            uint256 tokenId = cryptoDevsNFT.tokenOwnerByIndex(msg.sender, i);
+        for (uint256 i = 0; i < voterNFTbalance; i++) {
+            uint256 tokenId = cryptoDevsNFT.tokenOfOwnerByIndex(msg.sender, i);
             if(proposal.voters[tokenId] == false) {
                 numVotes++;
                 proposal.voters[tokenId] = true;
@@ -99,7 +99,7 @@ contract CryptoDevsDAO is Ownable {
         }
         require(numVotes > 0, "ALREADY_VOTED");
 
-        if(vote == Vote.Yay) {
+        if(vote == Vote.YAY) {
             proposal.yayVotes += numVotes;
         } else {
             proposal.nayVotes += numVotes;
@@ -124,7 +124,7 @@ contract CryptoDevsDAO is Ownable {
         if(proposal.yayVotes > proposal.nayVotes) {
             uint256 nftPrice = nftMarketplace.getPrice();
             require(address(this).balance >= nftPrice, "DAO does not have enough funds to purchase NFT");
-            nftMarketplace.purchase{value: nftPrice}(proposal.nftTokenId);
+            nftMarketplace.buy{value: nftPrice}(proposal.nftTokenId);
         }
         proposal.executed = true;
     }

@@ -4,6 +4,8 @@ import getDaoContractInstance from "@/utils/contract/getDAOcontract";
 import { web3ModalContext } from "@/pages/_app";
 import { motion } from "framer-motion";
 import { fetchAllProposals } from "@/utils/DAO/getProposals";
+import getNFTContractInstance from "@/utils/contract/getNFTcontract";
+import currentAddress from "@/utils/getAddress";
 
 interface Props {
   numProposals: number;
@@ -41,9 +43,9 @@ const Proposals = (props: Props) => {
         needSigner: true,
         web3modalRef,
       });
-      let vote = _vote === "YAY" ? 1 : 0;
+      let vote = _vote === "YAY" ? 0 : 1;
+      console.log(vote);
       const contract = await getDaoContractInstance(signer);
-      console.log({ id, vote });
       const tx = await contract.voteOnProposal(id, vote);
       setLoading(true);
       await tx.wait();
@@ -90,7 +92,7 @@ const Proposals = (props: Props) => {
       );
     } else {
       return (
-        <motion.div className="m-2 flex flex-col justify-center items-start w-full overflow-x-auto">
+        <motion.div className="flex flex-col justify-center items-start w-full overflow-x-auto">
           <>
             <div className="tabs">
               <a

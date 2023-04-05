@@ -24,7 +24,6 @@ URL: https://sepolia.etherscan.io/address/0x5984594262ddC084fDE998b1443AfDf2B7dB
 
 
 // ___ DAO CONTRACT ___
-0xaec7896cced812b1321dd73b9e02deacabeb6806 --- withdraw eth from this contract
-CryptoDevsDAO: 0x7C0fB2D2fEC4606e73F3849E5bF37353efc24648
+CryptoDevsDAO: 0x4935f2B8fC09b52f32ed1dA88732A0943cE7e493
 
-https://sepolia.etherscan.io/address/0x7C0fB2D2fEC4606e73F3849E5bF37353efc24648
+https://sepolia.etherscan.io/address/0x4935f2B8fC09b52f32ed1dA88732A0943cE7e493
