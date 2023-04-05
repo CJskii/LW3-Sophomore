@@ -24,6 +24,12 @@ URL: https://sepolia.etherscan.io/address/0x5984594262ddC084fDE998b1443AfDf2B7dB
 
 
 // ___ DAO CONTRACT ___
+
 CryptoDevsDAO: 0x4935f2B8fC09b52f32ed1dA88732A0943cE7e493
 
 https://sepolia.etherscan.io/address/0x4935f2B8fC09b52f32ed1dA88732A0943cE7e493
+
+// ___ EXCHANGE CONTRACT ___
+Exchange: 0x31bC410c4a26e9872476c97353c82755147917BF
+
+https://sepolia.etherscan.io/address/0x31bC410c4a26e9872476c97353c82755147917BF
