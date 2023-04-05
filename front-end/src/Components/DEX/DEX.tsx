@@ -1,3 +1,7 @@
+import React, { useEffect, useContext, useState } from "react";
+import getTokenContractInstance from "@/utils/contract/getTokencontract";
+import getExchangeContractInstance from "@/utils/contract/getExchangecontract";
+
 const DEX = () => {
   return (
     <div className="w-full h-full flex justify-center items-center grow pt-8">
