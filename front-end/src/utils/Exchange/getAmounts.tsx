@@ -6,7 +6,7 @@ import { EXCHANGE_CONTRACT_ADDRESS } from "@/constants/Exchange";
 
 export const getEtherBalance = async (
   providerOrSigner: any,
-  address: string,
+  address: string | null,
   contract = false
 ) => {
   try {

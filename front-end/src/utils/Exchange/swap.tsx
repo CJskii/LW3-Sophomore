@@ -1,6 +1,7 @@
 import getExchangeContractInstance from "../contract/getExchangecontract";
 import getTokenContractInstance from "../contract/getTokencontract";
 import { EXCHANGE_CONTRACT_ADDRESS } from "@/constants/Exchange";
+import { BigNumber } from "ethers";
 
 /*
     getAmountOfTokensReceivedFromSwap:  Returns the number of Eth/Crypto Dev tokens that can be received 
@@ -38,8 +39,8 @@ export const getAmountOfTokensReceivedFromSwap = async (
 
 export const swapTokens = async (
   signer: any,
-  swapAmountWei: string,
-  tokenToBeReceivedAfterSwap: string,
+  swapAmountWei: BigNumber,
+  tokenToBeReceivedAfterSwap: BigNumber,
   ethSelected: boolean
 ) => {
   // If Eth is selected call the `ethToCryptoDevToken` function else

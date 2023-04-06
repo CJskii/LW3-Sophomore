@@ -8,7 +8,7 @@ import getExchangeContractInstance from "../contract/getExchangecontract";
 
 export const removeLiquidity = async (
   signer: any,
-  removeLPTokensWei: string
+  removeLPTokensWei: BigNumber
 ) => {
   const exchangeContract = await getExchangeContractInstance(signer);
   const tx = await exchangeContract.removeLiquidity(removeLPTokensWei);

@@ -2,6 +2,7 @@ import getExchangeContractInstance from "../contract/getExchangecontract";
 import getTokenContractInstance from "../contract/getTokencontract";
 import { EXCHANGE_CONTRACT_ADDRESS } from "@/constants/Exchange";
 import { utils } from "ethers";
+import { BigNumber } from "ethers";
 
 /**
  * addLiquidity helps add liquidity to the exchange,
@@ -13,8 +14,8 @@ import { utils } from "ethers";
 
 export const addLiquidity = async (
   providerOrSigner: any,
-  addCDAmountWei: string,
-  addETHAmountWei: string
+  addCDAmountWei: BigNumber,
+  addETHAmountWei: BigNumber
 ) => {
   try {
     const tokenContract = getTokenContractInstance(providerOrSigner);
