@@ -6,6 +6,7 @@ import getExchangeContractInstance from "@/utils/contract/getExchangecontract";
 import currentAddress from "@/utils/getAddress";
 import { getProviderOrSigner } from "@/utils/providerSigner";
 import { BigNumber, utils } from "ethers";
+import Web3Modal from "web3modal";
 import { addLiquidity, calculateCD } from "@/utils/Exchange/addLiquidity";
 import {
   getCDTokensBalance,
@@ -22,11 +23,14 @@ import {
   getAmountOfTokensReceivedFromSwap,
 } from "@/utils/Exchange/swap";
 import Liquidity from "./Liquidity";
+import Swap from "./Swap";
+import OverviewDEX from "./OverviewDEX";
 
 const DEX = () => {
   const [walletConnected, setWalletConnected] = useContext(walletContext);
   const [web3modalRef, setWeb3modalRef] = useContext(web3ModalContext);
   const [liquidityTab, setLiquidityTab] = useState(true);
+  const [selectedTab, setSelectedTab] = useState("");
   const [loading, setLoading] = useState(false);
   const zero = BigNumber.from(0);
 
@@ -65,14 +69,30 @@ const DEX = () => {
   // keeps track of whether eth or cd is selected for swap
   const [ethSelected, setEthSelected] = useState(true);
 
-  const liquidityProps = {
-    cdBalance,
-    ethBalance,
-    lpBalance,
-    reservedCD,
-    addCDTokens,
-    setAddEther,
-    setAddCDTokens,
+  // ___ CONNECT WALLET ___
+
+  useEffect(() => {
+    // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
+    if (!walletConnected) {
+      // Assign the Web3Modal class to the reference object by setting its `current` value
+      // The `current` value is persisted throughout as long as this page is open
+      web3modalRef.current = new Web3Modal({
+        network: "goerli",
+        providerOptions: {},
+        disableInjectedProvider: false,
+      });
+      connectWallet();
+      getAmounts();
+    }
+  }, [walletConnected]);
+
+  const connectWallet = async () => {
+    try {
+      await getProviderOrSigner({ needSigner: false, web3modalRef });
+      setWalletConnected(true);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // ___ RETRIEVE AMOUNTS FOR ETH BALANCE AND LP TOKENS ETC ___
@@ -248,10 +268,49 @@ const DEX = () => {
     }
   };
 
+  const renderButton = () => {
+    if (!walletConnected) {
+      return (
+        <button onClick={connectWallet} className="btn">
+          Connect your wallet
+        </button>
+      );
+    }
+
+    if (loading) {
+      return <button className="btn loading">Loading...</button>;
+    }
+  };
+
+  const renderDEXContent = () => {
+    if (selectedTab === "Liquidity") {
+      const liquidityProps = {
+        // enter props here
+        setSelectedTab,
+      };
+      return <Liquidity {...liquidityProps} />;
+    } else if (selectedTab == "Swap") {
+      const swapProps = {
+        // enter props here
+        setSelectedTab,
+      };
+      return <Swap {...swapProps} />;
+    } else {
+      const overviewProps = {
+        setSelectedTab,
+      };
+      return <OverviewDEX {...overviewProps} />;
+    }
+  };
+
   return (
-    <div className="w-full h-full flex justify-center items-center grow pt-8">
-      <h1 className="text-5xl">DEX app</h1>
-      <Liquidity />
+    <div className="w-full h-full grid grid-rows-4 md:grid-rows-6 max-sm:grid-rows-8 grid-cols-12 grid-flow-rows pt-2 gap-8">
+      <h1 className="text-5xl font-montserrat font-bold self-center place-self-center col-start-1 col-span-12 max-lg:row-span-1 max-sm:row-span-1 text-center max-sm:col-start-1 max-sm:text-4xl">
+        DEX dApp
+      </h1>
+      <div className="h-full min-h-[400px] row-start-2 row-span-4 col-start-2 xl:col-start-3 col-span-10 xl:col-span-8 max-lg:row-start-2 max-sm:row-start-2 max-lg:col-start-1 max-lg:col-span-12 max-sm:col-span-12 max-[320px]:col-span-11 max-lg:m-2 grid grid-flow-row gap-8 bg-indigo-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 border border-gray-100">
+        {renderDEXContent()}
+      </div>
     </div>
   );
 };
