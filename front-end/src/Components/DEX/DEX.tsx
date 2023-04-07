@@ -84,7 +84,8 @@ const DEX = () => {
       connectWallet();
       getAmounts();
     }
-  }, [walletConnected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const connectWallet = async () => {
     try {
@@ -297,7 +298,10 @@ const DEX = () => {
       return <Swap {...swapProps} />;
     } else {
       const overviewProps = {
+        renderButton,
         setSelectedTab,
+        ethBalance,
+        cdBalance,
       };
       return <OverviewDEX {...overviewProps} />;
     }
