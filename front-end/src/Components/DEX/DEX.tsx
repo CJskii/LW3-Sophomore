@@ -18,7 +18,6 @@ import OverviewDEX from "./OverviewDEX";
 const DEX = () => {
   const [walletConnected, setWalletConnected] = useContext(walletContext);
   const [web3modalRef, setWeb3modalRef] = useContext(web3ModalContext);
-  const [liquidityTab, setLiquidityTab] = useState(true);
   const [selectedTab, setSelectedTab] = useState("");
   const [loading, setLoading] = useState(false);
   const zero = BigNumber.from(0);

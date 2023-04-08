@@ -77,7 +77,7 @@ const OverviewDEX = (props: Props) => {
                 setSelectedTab("Liquidity");
               }}
             >
-              Add Liquidity
+              Liquidity
             </button>
           </div>
 

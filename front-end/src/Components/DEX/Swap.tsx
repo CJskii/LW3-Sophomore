@@ -6,6 +6,7 @@ import {
   swapTokens,
   getAmountOfTokensReceivedFromSwap,
 } from "@/utils/Exchange/swap";
+import { motion } from "framer-motion";
 
 interface Props {
   setSelectedTab: (tab: string) => void;
@@ -117,7 +118,32 @@ const Swap = (props: Props) => {
           Add liquidity
         </a>
       </div>
-      <div className="flex flex-col justify-center items-center gap-4 mt-8 p-8 rounded min-w-[300px] bg-slate-800">
+      <motion.div
+        initial="initialState"
+        animate="animateState"
+        exit="exitState"
+        transition={{
+          duration: 1,
+        }}
+        variants={{
+          initialState: {
+            opacity: 0,
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+            y: 50,
+          },
+          animateState: {
+            opacity: 1,
+            clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+            y: 0,
+          },
+          exitState: {
+            clipPath: "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)",
+            y: -50,
+          },
+        }}
+        className="flex flex-col justify-center items-center gap-4 mt-8 p-8 rounded min-w-[300px] bg-slate-800"
+      >
+        {" "}
         <input
           type="number"
           placeholder="Amount"
@@ -161,7 +187,7 @@ const Swap = (props: Props) => {
             Swap
           </button>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

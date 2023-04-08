@@ -5,13 +5,11 @@ import {
   getEtherBalance,
   getReserveOfCDTokens,
 } from "@/utils/Exchange/getAmounts";
-import { addLiquidity, calculateCD } from "@/utils/Exchange/addLiquidity";
-import {
-  removeLiquidity,
-  getTokensAfterRemove,
-} from "@/utils/Exchange/removeLiquidity";
+import { addLiquidity } from "@/utils/Exchange/addLiquidity";
+import { getTokensAfterRemove } from "@/utils/Exchange/removeLiquidity";
 import AddLiquidty from "./AddLiquidity";
 import RemoveLiquidity from "./RemoveLiquidity";
+import { motion } from "framer-motion";
 
 interface Props {
   setSelectedTab: (tab: string) => void;
@@ -69,6 +67,8 @@ const Liquidity = (props: Props) => {
     try {
       // convert the amount entered by user to BigNumber using parseEther
       const addEtherWei = utils.parseEther(addEther.toString());
+      console.log(addEther);
+      console.log(addCDTokens);
       // check if user entered 0
       if (!addEtherWei.eq(zero)) {
         const signer = await getProviderOrSigner({
@@ -77,7 +77,7 @@ const Liquidity = (props: Props) => {
         });
         setLoading(true);
         // call the addLiquidity function from utils
-        await addLiquidity(signer, addEtherWei, addCDTokens);
+        await addLiquidity(signer, addCDTokens, addEtherWei);
         setLoading(false);
         // reinitialize CD tokens
         setAddCDTokens(zero);
@@ -164,8 +164,31 @@ const Liquidity = (props: Props) => {
               Add liquidity
             </a>
           </div>
-
-          <div className="text-white w-full grid grid-flow-row grid-cols-2 grid-rows-2 items-center gap-8">
+          <motion.div
+            initial="initialState"
+            animate="animateState"
+            exit="exitState"
+            transition={{
+              duration: 1,
+            }}
+            variants={{
+              initialState: {
+                opacity: 0,
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+                y: 50,
+              },
+              animateState: {
+                opacity: 1,
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+                y: 0,
+              },
+              exitState: {
+                clipPath: "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)",
+                y: -50,
+              },
+            }}
+            className="text-white w-full grid grid-flow-row grid-cols-2 grid-rows-2 items-center gap-8"
+          >
             <div className="w-full text-center col-span-2">
               You have:
               <br />
@@ -180,7 +203,7 @@ const Liquidity = (props: Props) => {
               <AddLiquidty {...addLiquidityProps} />
               <RemoveLiquidity {...removeLiquidityProps} />
             </div>
-          </div>
+          </motion.div>
         </>
       )}
     </div>
