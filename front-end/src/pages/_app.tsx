@@ -6,7 +6,13 @@ import Footer from "@/Components/Footer";
 import Links from "@/Components/Links";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, createContext, useRef, MutableRefObject } from "react";
+import {
+  useState,
+  createContext,
+  useRef,
+  MutableRefObject,
+  useEffect,
+} from "react";
 import ConnectButton from "@/Components/ConnectButton";
 import Web3Modal from "web3modal";
 
@@ -27,6 +33,20 @@ export default function App({ Component, pageProps }: AppProps) {
   const [walletConnected, setWalletConnected] = useState(false);
   const modalRef = useRef<Web3Modal | null>(null);
   const [web3modalRef, setWeb3modalRef] = useState(modalRef);
+  const [imageLoaded, setImageLoaded] = useState("");
+
+  const handleImageLoad = () => {
+    setImageLoaded(styles.background);
+  };
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/bg.png";
+    img.addEventListener("load", handleImageLoad);
+    return () => {
+      img.removeEventListener("load", handleImageLoad);
+    };
+  }, []);
 
   return (
     <web3ModalContext.Provider value={[web3modalRef, setWeb3modalRef]}>
@@ -56,7 +76,7 @@ export default function App({ Component, pageProps }: AppProps) {
           >
             <div
               className={`${
-                currentPath !== "/" ? styles.background : null
+                currentPath !== "/" ? imageLoaded : null
               } min-h-screen flex flex-col justify-between items-center`}
             >
               <div className="w-full">

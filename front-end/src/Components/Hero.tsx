@@ -1,4 +1,9 @@
 import { motion } from "framer-motion";
+import { useContext, useEffect } from "react";
+import { walletContext } from "@/pages/_app";
+import { web3ModalContext } from "@/pages/_app";
+import { getProviderOrSigner } from "@/utils/providerSigner";
+import Web3Modal from "web3modal";
 
 const Hero = () => {
   const variantsHero = {
@@ -6,13 +11,31 @@ const Hero = () => {
     visible: { y: 0, opacity: 1 },
   };
 
-  const variantsBtn = {
-    hover: { scale: 1.1, boxShadow: "0px 0px 12px rgb(192, 41, 38,0.8)" },
-    tap: { scale: 0.9 },
-    animate: {
-      y: [-50, 0, 50],
-      transition: { duration: 2, repeat: Infinity },
-    },
+  const [walletConnected, setWalletConnected] = useContext(walletContext);
+  const [web3modalRef, setWeb3modalRef] = useContext(web3ModalContext);
+
+  useEffect(() => {
+    // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
+    if (!walletConnected) {
+      // Assign the Web3Modal class to the reference object by setting its `current` value
+      // The `current` value is persisted throughout as long as this page is open
+      web3modalRef.current = new Web3Modal({
+        network: "goerli",
+        providerOptions: {},
+        disableInjectedProvider: false,
+      });
+      connectWallet();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const connectWallet = async () => {
+    try {
+      await getProviderOrSigner({ needSigner: false, web3modalRef });
+      setWalletConnected(true);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
