@@ -41,8 +41,8 @@ export const addLiquidity = async (
 
 export const calculateCD = async (
   _addEther = "0",
-  etherBalanceContract: string,
-  cdTokenReserve: string
+  etherBalanceContract: BigNumber,
+  cdTokenReserve: BigNumber
 ) => {
   // add ether is string, we need to convert it to BigNumber to perform calculations
   const _addEtherAmountWei = utils.parseEther(_addEther);
