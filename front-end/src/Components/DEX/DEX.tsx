@@ -48,8 +48,8 @@ const DEX = () => {
         disableInjectedProvider: false,
       });
       connectWallet();
-      getAmounts();
     }
+    getAmounts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

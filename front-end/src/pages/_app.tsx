@@ -61,12 +61,12 @@ export default function App({ Component, pageProps }: AppProps) {
             >
               <div className="w-full">
                 {currentPath == "/home" ? <Navbar /> : null}
-                <ConnectButton />
-                {/* {currentPath !== "/" &&
+                {/* <ConnectButton /> */}
+                {currentPath !== "/" &&
                 currentPath !== "/home" &&
                 !walletConnected ? (
                   <ConnectButton />
-                ) : null} */}
+                ) : null}
                 {/* <Navbar /> */}
                 {currentPath !== "/" ? (
                   <Links currentPath={currentPath} />
