@@ -1,5 +1,5 @@
 import { utils, BigNumber } from "ethers";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getProviderOrSigner } from "@/utils/providerSigner";
 import { getEtherBalance } from "@/utils/Exchange/getAmounts";
 import {
@@ -29,6 +29,11 @@ const Swap = (props: Props) => {
     useState(zero);
   // keeps track of whether eth or cd is selected for swap
   const [ethSelected, setEthSelected] = useState(true);
+
+  useEffect(() => {
+    getAmounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   // ___ SWAP FUNCTIONS ___
 

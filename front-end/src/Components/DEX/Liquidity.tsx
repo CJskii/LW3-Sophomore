@@ -1,5 +1,5 @@
 import { utils, BigNumber } from "ethers";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getProviderOrSigner } from "@/utils/providerSigner";
 import {
   getEtherBalance,
@@ -60,6 +60,11 @@ const Liquidity = (props: Props) => {
    * constant
    */
 
+  useEffect(() => {
+    getAmounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
   const _addLiquidity = async () => {
     try {
       // convert the amount entered by user to BigNumber using parseEther
@@ -91,28 +96,6 @@ const Liquidity = (props: Props) => {
    * _removeLiquidity: Removes the `removeLPTokensWei` amount of LP tokens from
    * liquidity and also the calculated amount of `ether` and `CD` tokens
    */
-
-  const _removeLiquidity = async () => {
-    console.log("removing");
-    try {
-      const signer = await getProviderOrSigner({
-        needSigner: true,
-        web3modalRef,
-      });
-      setLoading(true);
-      // convert the amount entered by user to BigNumber using parseEther
-      const removeLPTokensWei = utils.parseEther(removeLPTokens.toString());
-      await removeLiquidity(signer, removeLPTokensWei);
-      setLoading(false);
-      // update the balances
-      getAmounts();
-      setRemoveCD(zero);
-      setRemoveEther(zero);
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
 
   const _getTokensAfterRemove = async (_removeLPTokens: string) => {
     try {
@@ -151,8 +134,11 @@ const Liquidity = (props: Props) => {
     _getTokensAfterRemove,
     removeCD,
     removeEther,
-    _removeLiquidity,
     removeLPTokens,
+    web3modalRef,
+    getAmounts,
+    setRemoveCD,
+    setRemoveEther,
   };
 
   return (

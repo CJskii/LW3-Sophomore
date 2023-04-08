@@ -1,5 +1,6 @@
 import { BigNumber, utils } from "ethers";
 import { calculateCD } from "@/utils/Exchange/addLiquidity";
+import React, { useEffect } from "react";
 
 interface Props {
   reservedCD: BigNumber;
@@ -49,7 +50,7 @@ const AddLiquidty = (props: Props) => {
             />
           </div>
 
-          <button className="btn" onClick={() => _addLiquidity}>
+          <button className="btn" onClick={() => _addLiquidity()}>
             Add
           </button>
         </div>
