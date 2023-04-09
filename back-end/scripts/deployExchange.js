@@ -14,11 +14,19 @@ async function main() {
   const deployedExchangeContract = await exchangeContract.deploy(
     cryptoDevTokenAddress
   );
+  console.log(
+    "---------------------------------------------------------------"
+  );
   console.log("Deploying Exchange Contract...");
   await deployedExchangeContract.deployed();
+  console.log("Exchange contract deployed!");
 
   // print the address of the deployed contract
-  console.log("Exchange Contract Address:", deployedExchangeContract.address);
+  console.log("Contract Address:", deployedExchangeContract.address);
+  console.log(
+    "---------------------------------------------------------------"
+  );
+  return deployedExchangeContract.address;
 }
 
 // Call the main function and catch if there is any error

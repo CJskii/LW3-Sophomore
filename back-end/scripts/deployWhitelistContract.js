@@ -7,15 +7,24 @@ async function main() {
   */
   const whitelistContract = await ethers.getContractFactory("Whitelist");
 
+  console.log(
+    "---------------------------------------------------------------"
+  );
+
   // here we deploy the contract
   const deployedWhitelistContract = await whitelistContract.deploy(10);
+  console.log("Deploying Whitelist Contract...");
   // 10 is the Maximum number of whitelisted addresses allowed
 
   // Wait for it to finish deploying
   await deployedWhitelistContract.deployed();
-
+  console.log("Whitelist contract deployed!");
   // print the address of the deployed contract
-  console.log("Whitelist Contract Address:", deployedWhitelistContract.address);
+  console.log("Contract Address:", deployedWhitelistContract.address);
+  console.log(
+    "---------------------------------------------------------------"
+  );
+  return deployedWhitelistContract.address;
 }
 
 // Call the main function and catch if there is any error

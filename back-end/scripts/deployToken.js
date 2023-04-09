@@ -13,18 +13,23 @@ async function main() {
   const cryptoDevsTokenContract = await ethers.getContractFactory(
     "CryptoDevToken"
   );
-
+  console.log(
+    "---------------------------------------------------------------"
+  );
   // deploy the contract
   const deployedCryptoDevsTokenContract = await cryptoDevsTokenContract.deploy(
     cryptoDevsNFTContract
   );
+  console.log("Deploying Crypto Devs Token Contract...");
 
   await deployedCryptoDevsTokenContract.deployed();
+  console.log("Crypto Devs Token contract deployed!");
   // print the address of the deployed contract
+  console.log("Contract Address:", deployedCryptoDevsTokenContract.address);
   console.log(
-    "Crypto Devs Token Contract Address:",
-    deployedCryptoDevsTokenContract.address
+    "---------------------------------------------------------------"
   );
+  return deployedCryptoDevsTokenContract.address;
 }
 
 // Call the main function and catch if there is any error

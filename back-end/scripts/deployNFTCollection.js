@@ -12,21 +12,25 @@ async function main() {
   so cryptoDevsContract here is a factory for instances of our CryptoDevs contract.
   */
   const cryptoDevsContract = await ethers.getContractFactory("CryptoDevs");
-
+  console.log(
+    "---------------------------------------------------------------"
+  );
   // deploy the contract
   const deployedCryptoDevsContract = await cryptoDevsContract.deploy(
     metadataURL,
     whitelistContract
   );
+  console.log("Deploying Crypto Devs NFT Contract...");
 
   // Wait for it to finish deploying
   await deployedCryptoDevsContract.deployed();
-
+  console.log("Crypto Devs NFT contract ceployed!");
   // print the address of the deployed contract
+  console.log("Contract Address:", deployedCryptoDevsContract.address);
   console.log(
-    "Crypto Devs Contract Address:",
-    deployedCryptoDevsContract.address
+    "---------------------------------------------------------------"
   );
+  return deployedCryptoDevsContract.address;
 }
 
 // Call the main function and catch if there is any error
