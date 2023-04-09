@@ -1,5 +1,5 @@
-export const WHITELIST_CONTRACT_ADDRESS =
-  "0x0B917F15EE256F5d24170e1Bba9b9Fd648EDd976";
+import { CD_WHITELIST_CONTRACT_ADDRESS } from "../../../back-end/yourContracts.js";
+export const WHITELIST_CONTRACT_ADDRESS = CD_WHITELIST_CONTRACT_ADDRESS;
 export const abi = [
   {
     inputs: [

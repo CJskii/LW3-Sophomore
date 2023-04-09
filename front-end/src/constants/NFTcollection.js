@@ -1,5 +1,5 @@
-export const NFT_CONTRACT_ADDRESS =
-  "0x1Fa510dA81A92A5737dEf80172401E3f9712CA29";
+import { CD_NFT_CONTRACT_ADDRESS } from "../../../back-end/yourContracts.js";
+export const NFT_CONTRACT_ADDRESS = CD_NFT_CONTRACT_ADDRESS;
 
 export const abi = [
   {

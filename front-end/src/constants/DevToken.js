@@ -1,5 +1,6 @@
-export const TOKEN_CONTRACT_ADDRESS =
-  "0x26ED5E9a94ea92A0E7DfC103b7681E94Ce9B52bF";
+import { CD_TOKEN_CONTRACT_ADDRESS } from "../../../back-end/yourContracts.js";
+
+export const TOKEN_CONTRACT_ADDRESS = CD_TOKEN_CONTRACT_ADDRESS;
 export const TOKEN_CONTRACT_ABI = [
   {
     inputs: [

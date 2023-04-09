@@ -1,5 +1,5 @@
-export const EXCHANGE_CONTRACT_ADDRESS =
-  "0x31bC410c4a26e9872476c97353c82755147917BF";
+import { CD_EXCHANGE_CONTRACT_ADDRESS } from "../../../back-end/yourContracts.js";
+export const EXCHANGE_CONTRACT_ADDRESS = CD_EXCHANGE_CONTRACT_ADDRESS;
 
 export const EXCHANGE_CONTRACT_ABI = [
   {

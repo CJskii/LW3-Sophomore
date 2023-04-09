@@ -1,5 +1,7 @@
-export const CRYPTODEVS_DAO_CONTRACT_ADDRESS =
-  "0x4935f2B8fC09b52f32ed1dA88732A0943cE7e493";
+import { CD_DAO_CONTRACT_ADDRESS } from "../../../back-end/yourContracts.js";
+
+export const CRYPTODEVS_DAO_CONTRACT_ADDRESS = CD_DAO_CONTRACT_ADDRESS;
+
 export const CRYPTODEVS_DAO_CONTRACT_ABI = [
   {
     inputs: [
